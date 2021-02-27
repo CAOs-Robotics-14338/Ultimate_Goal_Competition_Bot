@@ -87,16 +87,33 @@ public class Wobble_OpMode extends LinearOpMode {
             else if (gamepad1.x == true){
                wobbleGoal.lowerWobbleGoal();
             }
-            else{
+            else if (gamepad1.back == true){
                 wobbleGoal.stopGoal();
             }
 
             /************SERVO ADVENTURES************/
-            if (gamepad1.right_bumper){
-                wobbleGoal.activateClaw();
+
+            /**
+             *  double neutral = 0;
+             *     double grab = 0.5;
+             *     double store = 1;
+             */
+            if (gamepad1.b){
+                //wobbleGoal.activateClaw();
+                servo.setPosition(0.25);
+            }
+            else if (gamepad1.a){
+                //wobbleGoal.storeClaw();
+                servo.setPosition(0.5);
+            }
+            else if (gamepad1.right_stick_button){
+                servo.setPosition(0.75);
+            }
+            else if (gamepad1.right_bumper){
+                servo.setPosition(1);
             }
             else if (gamepad1.left_bumper){
-                wobbleGoal.storeClaw();
+                servo.setPosition(0);
             }
 
         }

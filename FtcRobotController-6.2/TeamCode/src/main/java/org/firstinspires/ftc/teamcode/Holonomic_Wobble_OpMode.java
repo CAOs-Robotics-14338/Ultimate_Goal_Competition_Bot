@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -50,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Holonomic WOBBLE GOAL OpMode", group="Iterative Opmode")
-//@Disabled
+@Disabled
 public class Holonomic_Wobble_OpMode extends OpMode
 {
     // Declare OpMode members.
@@ -117,7 +118,7 @@ public class Holonomic_Wobble_OpMode extends OpMode
 
         holonomicDrive.teleopDrive(x,y,z);
 
-       
+
         if (gamepad1.y == true){
             wobbleGoal.raiseWobbleGoal();
         }

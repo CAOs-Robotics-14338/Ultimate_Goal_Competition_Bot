@@ -7,7 +7,7 @@ public class WobbleGoal {
     // Set up Hardware Devices
         /* Motors */
     DcMotor linSlide;
-    double slidePower = 1.0;
+    double slidePower = 0.50; //1.0
         /*Servos*/
     Servo claw;
     /*** CLAW Positions ***/
