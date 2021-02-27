@@ -29,7 +29,6 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -50,23 +49,27 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="TeleOP Test", group="Iterative Opmode")
-@Disabled
-public class TestOp extends OpMode
+@TeleOp(name="Holonomic WOBBLE GOAL OpMode", group="Iterative Opmode")
+//@Disabled
+public class Holonomic_Wobble_OpMode extends OpMode
 {
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
-    private DcMotor  FrontRightMotor, FrontLeftMotor, BackRightMotor, BackLeftMotor, ShooterMotor;
-    //private Servo ;
+    private DcMotor  FrontRightMotor, FrontLeftMotor, BackRightMotor, BackLeftMotor;
+
+    private DcMotor linearSlide = null;
+    private Servo servo = null;
+
 
     HolonomicDrive holonomicDrive;
-
+    WobbleGoal wobbleGoal;
 
     /*
      * Code to run ONCE when the driver hits INIT
      */
     @Override
     public void init() {
+        telemetry.addData("Status", "Initialized");
 
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
@@ -75,11 +78,13 @@ public class TestOp extends OpMode
         FrontLeftMotor = hardwareMap.get(DcMotor.class, "front_left_drive");
         BackRightMotor  = hardwareMap.get(DcMotor.class, "back_right_drive");
         BackLeftMotor = hardwareMap.get(DcMotor.class, "back_left_drive");
-        ShooterMotor = hardwareMap.get(DcMotor.class, "shooter_motor");
 
+        linearSlide  = hardwareMap.get(DcMotor.class, "slide");
+        servo = hardwareMap.get(Servo.class, "claw");
 
 
         holonomicDrive = new HolonomicDrive(FrontRightMotor, FrontLeftMotor, BackRightMotor, BackLeftMotor);
+        wobbleGoal = new WobbleGoal(linearSlide, servo);
 
 
         // Tell the driver that initialization is complete.
@@ -110,41 +115,28 @@ public class TestOp extends OpMode
         double y = -gamepad1.left_stick_y;
         double z = gamepad1.right_stick_x;
 
-
-
-        double y2 = gamepad2.left_stick_y;
-        boolean Left_Bumper = gamepad2.left_bumper;
-        boolean Right_Bumper = gamepad2.right_bumper;
-        boolean A_button = gamepad2.a;
-        telemetry.addData("Use left thumbstick on gamepad 2 to adjust the shooting motor power", "\nPower: " + y2);
-        telemetry.addLine("\nLeft bumper will set motor to 50% power, right = 100%.  Hold A to reverse direction.");
-        if(y2 != 0) {
-            ShooterMotor.setPower(y2);
-        }
-
-        else if(Left_Bumper)
-        {
-            if (A_button) {
-                ShooterMotor.setPower(-0.5);
-            } else {
-                ShooterMotor.setPower(0.5);
-            }
-        }
-
-        else if(Right_Bumper) {
-            if (A_button) {
-                ShooterMotor.setPower(-1);
-            } else {
-                ShooterMotor.setPower(1);
-            }
-        }
-        else
-        {
-            ShooterMotor.setPower(0);
-        }
-
-
         holonomicDrive.teleopDrive(x,y,z);
+
+       
+        if (gamepad1.y == true){
+            wobbleGoal.raiseWobbleGoal();
+        }
+        else if (gamepad1.x == true){
+            wobbleGoal.lowerWobbleGoal();
+        }
+        else{
+            wobbleGoal.stopGoal();
+        }
+
+        /************SERVO ADVENTURES************/
+        if (gamepad1.right_bumper){
+            wobbleGoal.activateClaw();
+        }
+        else if (gamepad1.left_bumper){
+            wobbleGoal.storeClaw();
+        }
+
+
         // Show the elapsed game time and wheel power.
         telemetry.addData("Status", "Run Time: " + runtime.toString());
     }
