@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -60,8 +61,12 @@ public class OmniDriveIntake extends LinearOpMode {
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotor centerDrive = null;
+    private DcMotor launchLeft = null;
+    private DcMotor launchRight = null;
+
 
     private CRServo intake = null;
+    private Servo trigger = null;
 
     @Override
     public void runOpMode() {
@@ -74,14 +79,20 @@ public class OmniDriveIntake extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         centerDrive = hardwareMap.get(DcMotor.class, "center_drive");
+        launchLeft = hardwareMap.get(DcMotor.class, "launch_left");
+        launchRight = hardwareMap.get(DcMotor.class, "launch_right");
 
         intake = hardwareMap.get(CRServo.class, "intake");
+        trigger = hardwareMap.get(Servo.class, "trigger");
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         centerDrive.setDirection(DcMotor.Direction.FORWARD);
+        launchRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        launchLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+
 
         intake.setDirection(CRServo.Direction.FORWARD); //Setting up so positive is intaking but negative is pushing the rings away
         // Wait for the game to start (driver presses PLAY)
@@ -95,6 +106,7 @@ public class OmniDriveIntake extends LinearOpMode {
             double leftPower;
             double rightPower;
             double centerPower;
+            double launcherPower;
 
             double intakePower = 1;
 
@@ -105,8 +117,13 @@ public class OmniDriveIntake extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
             double drive = -gamepad1.right_stick_y;
             double turn  =  gamepad1.right_stick_x;
+
+            double leftTrigger = gamepad1.left_trigger;
+            double rightTrigger = gamepad1.right_trigger;
+            boolean isPressed = false;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
+            launcherPower = Range.clip(leftTrigger-rightTrigger, -1.0, 1.0);
 
             centerPower = gamepad1.left_stick_x;
             // Tank Mode uses one stick to control each wheel.
@@ -118,6 +135,8 @@ public class OmniDriveIntake extends LinearOpMode {
             leftDrive.setPower(leftPower);
             rightDrive.setPower(rightPower);
             centerDrive.setPower(centerPower);
+            launchLeft.setPower(launcherPower);
+            launchRight.setPower(launcherPower);
 
             if (gamepad1.a == true){
                 intake.setPower(intakePower);
@@ -127,7 +146,31 @@ public class OmniDriveIntake extends LinearOpMode {
             }
             else{
                 intake.setPower(0);
+                isPressed = false;
             }
+            if(gamepad1.y == true && isPressed == false)
+            {
+                isPressed = true;
+                trigger.setPosition(1);
+                sleep(500);
+                trigger.setPosition(-1);
+
+            }
+            else if(gamepad1.x == true && isPressed == false)
+            {
+                isPressed = true;
+                trigger.setPosition(-1);
+                sleep(500);
+                trigger.setPosition(1);
+            }
+            else
+            {
+                isPressed = false;
+            }
+
+
+
+
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f), center (&.2f)", leftPower, rightPower, centerPower);
