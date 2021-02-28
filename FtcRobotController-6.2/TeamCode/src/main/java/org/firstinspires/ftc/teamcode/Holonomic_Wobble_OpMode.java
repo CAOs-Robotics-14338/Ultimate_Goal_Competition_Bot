@@ -86,7 +86,7 @@ public class Holonomic_Wobble_OpMode extends OpMode
 
         holonomicDrive = new HolonomicDrive(FrontRightMotor, FrontLeftMotor, BackRightMotor, BackLeftMotor);
         wobbleGoal = new WobbleGoal(linearSlide, servo);
-
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Tell the driver that initialization is complete.
         telemetry.addData("Status", "Initialized");
