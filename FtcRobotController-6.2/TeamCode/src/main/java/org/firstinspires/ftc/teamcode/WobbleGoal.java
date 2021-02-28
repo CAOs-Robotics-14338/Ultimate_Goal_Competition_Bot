@@ -11,9 +11,14 @@ public class WobbleGoal {
         /*Servos*/
     Servo claw;
     /*** CLAW Positions ***/
-    double neutral = 0;
-    double grab = 0.5;
-    double store = 1;
+    /**
+     *  double lift = 0;
+     *     double grab = 0.25;
+     *     double stow = 0.5;
+     */
+    double lift = 0;
+    double grab = 0.25;
+    double stow = 0.5;
 
     //Constructors
     public WobbleGoal(DcMotor linearSlide, Servo servo){
@@ -28,13 +33,13 @@ public class WobbleGoal {
     }
 
     public void storeClaw(){
-        this.setClaw(store);
+        this.setClaw(stow);
     }
     public void activateClaw() {
         this.setClaw(grab);
     }
     public void neturalClaw(){
-        this.setClaw(neutral);
+        this.setClaw(lift);
     }
     public void zeroPosition(){
         this.setClaw(0);
