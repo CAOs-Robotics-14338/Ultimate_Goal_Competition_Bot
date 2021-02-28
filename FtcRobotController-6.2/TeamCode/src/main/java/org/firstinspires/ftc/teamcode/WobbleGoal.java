@@ -7,7 +7,8 @@ public class WobbleGoal {
     // Set up Hardware Devices
         /* Motors */
     DcMotor linSlide;
-    double slidePower = 0.50; //1.0
+    double slideLowerPower = 0.25; //1.0
+    double slideLiftPower = 0.80;
         /*Servos*/
     Servo claw;
     /*** CLAW Positions ***/
@@ -46,10 +47,10 @@ public class WobbleGoal {
 
     /*** LINEAR SLIDE METHODS ***/
     public void raiseWobbleGoal(){
-        linSlide.setPower(slidePower);
+        linSlide.setPower(slideLiftPower);
     }
     public void lowerWobbleGoal(){
-        linSlide.setPower(-1*slidePower);
+        linSlide.setPower(-1*slideLowerPower);
     }
     public void stopGoal(){ linSlide.setPower(0);}
     public void deliverWobbleGoal(){

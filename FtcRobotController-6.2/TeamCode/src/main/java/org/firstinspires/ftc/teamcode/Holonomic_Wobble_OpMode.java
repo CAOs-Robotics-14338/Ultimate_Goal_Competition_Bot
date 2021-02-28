@@ -112,9 +112,9 @@ public class Holonomic_Wobble_OpMode extends OpMode
      */
     @Override
     public void loop() {
-        double x = gamepad1.left_stick_x;
-        double y = -gamepad1.left_stick_y;
-        double z = gamepad1.right_stick_x;
+        double x = -gamepad1.left_stick_x;
+        double y = gamepad1.left_stick_y;
+        double z = -gamepad1.right_stick_x;
 
         holonomicDrive.teleopDrive(x,y,z);
 
