@@ -101,10 +101,12 @@ public class Wobble_OpMode extends LinearOpMode {
             if (gamepad1.b){
                 //wobbleGoal.activateClaw();
                 servo.setPosition(0.25);
+                // Angle to grab
             }
             else if (gamepad1.a){
                 //wobbleGoal.storeClaw();
                 servo.setPosition(0.5);
+                // Stow
             }
             else if (gamepad1.right_stick_button){
                 servo.setPosition(0.75);
@@ -114,6 +116,7 @@ public class Wobble_OpMode extends LinearOpMode {
             }
             else if (gamepad1.left_bumper){
                 servo.setPosition(0);
+                // position to lift up wobble
             }
 
         }
