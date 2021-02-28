@@ -54,6 +54,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name="Wobble Goal OpMode", group="Linear Opmode")
+@Disabled
 
 public class Wobble_OpMode extends LinearOpMode {
 
