@@ -75,6 +75,7 @@ public class Wobble_OpMode extends LinearOpMode {
         servo = hardwareMap.get(Servo.class, "claw");
 
         wobbleGoal = new WobbleGoal(linearSlide, servo);
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
