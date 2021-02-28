@@ -63,6 +63,8 @@ public class OmniDriveIntake extends LinearOpMode {
     private DcMotor centerDrive = null;
     private DcMotor launchLeft = null;
     private DcMotor launchRight = null;
+    private DcMotor conveyorBelt = null;
+
 
 
     private CRServo intake = null;
@@ -81,6 +83,8 @@ public class OmniDriveIntake extends LinearOpMode {
         centerDrive = hardwareMap.get(DcMotor.class, "center_drive");
         launchLeft = hardwareMap.get(DcMotor.class, "launch_left");
         launchRight = hardwareMap.get(DcMotor.class, "launch_right");
+        conveyorBelt = hardwareMap.get(DcMotor.class, "belt");
+
 
         intake = hardwareMap.get(CRServo.class, "intake");
         trigger = hardwareMap.get(Servo.class, "trigger");
@@ -90,8 +94,8 @@ public class OmniDriveIntake extends LinearOpMode {
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         centerDrive.setDirection(DcMotor.Direction.FORWARD);
-        launchRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        launchLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        launchRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        launchLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
 
         intake.setDirection(CRServo.Direction.FORWARD); //Setting up so positive is intaking but negative is pushing the rings away
@@ -118,12 +122,14 @@ public class OmniDriveIntake extends LinearOpMode {
             double drive = -gamepad1.right_stick_y;
             double turn  =  gamepad1.right_stick_x;
 
+
             double leftTrigger = gamepad1.left_trigger;
-            double rightTrigger = gamepad1.right_trigger;
             boolean isPressed = false;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
-            launcherPower = Range.clip(leftTrigger-rightTrigger, -1.0, 1.0);
+            launcherPower = Range.clip(leftTrigger, -1.0, 1.0);
+            double conveyorPower = 1;
+            //launcherPower = Range.clip(rightTrigger, -1.0, 1.0);
 
             centerPower = gamepad1.left_stick_x;
             // Tank Mode uses one stick to control each wheel.
@@ -140,15 +146,29 @@ public class OmniDriveIntake extends LinearOpMode {
 
             if (gamepad1.a == true){
                 intake.setPower(intakePower);
+                conveyorBelt.setPower(conveyorPower);
             }
             else if (gamepad1.b == true){
                 intake.setPower(-intakePower);
+                conveyorBelt.setPower(-conveyorPower);
             }
             else{
                 intake.setPower(0);
-                isPressed = false;
+                conveyorBelt.setPower(0);
             }
-            if(gamepad1.y == true && isPressed == false)
+
+
+            if (gamepad1.right_trigger > 0){
+                launchLeft.setPower(-gamepad1.right_trigger);
+                launchRight.setPower(-gamepad1.right_trigger);
+            }
+            else {
+                launchLeft.setPower(0);
+                launchRight.setPower(0);
+
+            }
+
+            if(gamepad1.right_bumper == true && isPressed == false)
             {
                 isPressed = true;
                 trigger.setPosition(1);
@@ -156,7 +176,7 @@ public class OmniDriveIntake extends LinearOpMode {
                 trigger.setPosition(-1);
 
             }
-            else if(gamepad1.x == true && isPressed == false)
+            else if(gamepad1.left_bumper == true && isPressed == false)
             {
                 isPressed = true;
                 trigger.setPosition(-1);
