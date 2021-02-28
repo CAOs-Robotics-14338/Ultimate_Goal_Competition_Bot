@@ -94,9 +94,9 @@ public class Wobble_OpMode extends LinearOpMode {
             /************SERVO ADVENTURES************/
 
             /**
-             *  double neutral = 0;
-             *     double grab = 0.5;
-             *     double store = 1;
+             *  double lift = 0;
+             *     double grab = 0.25;
+             *     double stow = 0.5;
              */
             if (gamepad1.b){
                 //wobbleGoal.activateClaw();
