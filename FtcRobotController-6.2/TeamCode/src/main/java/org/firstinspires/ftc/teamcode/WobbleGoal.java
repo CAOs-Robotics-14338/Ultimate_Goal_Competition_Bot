@@ -11,9 +11,14 @@ public class WobbleGoal {
         /*Servos*/
     Servo claw;
     /*** CLAW Positions ***/
-    double neutral = 0;
-    double grab = 0.5;
-    double store = 1;
+    /**
+     *  double lift = 0;
+     *     double grab = 0.25;
+     *     double stow = 0.5;
+     */
+    double lift = 0;
+    double grab = 0.25;
+    double stow = 0.5;
 
     //Constructors
     public WobbleGoal(DcMotor linearSlide, Servo servo){
@@ -21,24 +26,24 @@ public class WobbleGoal {
          claw = servo;
     }
     //Methods
-    /***SERVO METHODS***/
 
+    /***SERVO METHODS***/
     public void setClaw(double pos) {
         this.claw.setPosition(pos);
     }
-
     public void storeClaw(){
-        this.setClaw(store);
+        this.setClaw(stow);
     }
     public void activateClaw() {
         this.setClaw(grab);
     }
-    public void neturalClaw(){
-        this.setClaw(neutral);
+    public void setliftClawPosition(){
+        this.setClaw(lift);
     }
     public void zeroPosition(){
         this.setClaw(0);
     }
+
     /*** LINEAR SLIDE METHODS ***/
     public void raiseWobbleGoal(){
         linSlide.setPower(slidePower);
@@ -48,7 +53,7 @@ public class WobbleGoal {
     }
     public void stopGoal(){ linSlide.setPower(0);}
     public void deliverWobbleGoal(){
-        //lower linear slide  timed??
+        //lower linear slide timed, encodered, ....??
         //move claw to its stored position
     }
 }

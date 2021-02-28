@@ -51,7 +51,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
  */
 
 @TeleOp(name="Holonomic WOBBLE GOAL OpMode", group="Iterative Opmode")
-@Disabled
+
 public class Holonomic_Wobble_OpMode extends OpMode
 {
     // Declare OpMode members.
@@ -118,7 +118,7 @@ public class Holonomic_Wobble_OpMode extends OpMode
 
         holonomicDrive.teleopDrive(x,y,z);
 
-
+//Wobble Goal Logic Tree
         if (gamepad1.y == true){
             wobbleGoal.raiseWobbleGoal();
         }
@@ -131,9 +131,12 @@ public class Holonomic_Wobble_OpMode extends OpMode
 
         /************SERVO ADVENTURES************/
         if (gamepad1.right_bumper){
-            wobbleGoal.activateClaw();
+            wobbleGoal.setliftClawPosition();
         }
         else if (gamepad1.left_bumper){
+            wobbleGoal.activateClaw();
+        }
+        else if (gamepad1.back){
             wobbleGoal.storeClaw();
         }
 
