@@ -50,7 +50,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Drive Intake Launcher OpMode", group="Linear Opmode")
+@TeleOp(name="Drive Intake Launcher Power Options OpMode", group="Linear Opmode")
 
 public class DriveIntakeLauncherPower extends LinearOpMode {
 
