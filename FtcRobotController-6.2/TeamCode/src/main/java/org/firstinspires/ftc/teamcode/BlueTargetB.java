@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -13,13 +14,7 @@ import org.firstinspires.ftc.teamcode.gyro;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
 
-/**
- *
- *
- * May add a variable or another class that will park the robot on the left or right half of the alliance bridge
- *
- *
- * */
+
 // Declaring autonomous named Servo_Autonomous with the ground test
 @Autonomous(name="A Mysterious Autonomous Appears", group="Blue")
 // Creating class named servo autonomous that uses linear op mode
@@ -90,7 +85,7 @@ public class BlueTargetB extends LinearOpMode {
         // Reverse the motor that runs backwards when connected directly to the battery
         /* DRIVE */
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
         centerDrive.setDirection(DcMotor.Direction.REVERSE);
 
         /* INTAKE */
@@ -116,30 +111,49 @@ public class BlueTargetB extends LinearOpMode {
 
 
         // Drive forward to the goal
-        while (opModeIsActive() && runtime.seconds() < 2){
+        while (opModeIsActive() && runtime.seconds() < 3.2){
             leftDrive.setPower(0.30);
             rightDrive.setPower(0.30);
             // Adding telemetry data of our direction and run time
             telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
-
-        Gyro.rotate(25,0.3);
-        sleep(200);
+        runtime.reset();
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
+        sleep(500);
         // Launch
-        launchLeft.setPower(0.35);
-        launchRight.setPower(0.35);
+        launchLeft.setPower(0.45);
+        launchRight.setPower(0.45);
         sleep(1000);
-        for(int i = 0; i < 3; i++)
-        {
-            Trigger.setPosition(trigger_extended);
-            sleep(850);
-            Trigger.setPosition(trigger_retracted);
-            sleep(500);
-        }
+        Trigger.setPosition(trigger_extended);
+        sleep(850);
+        Trigger.setPosition(trigger_retracted);
+        sleep(500);
+        sleep(1000);
+        Trigger.setPosition(trigger_extended);
+        sleep(850);
+        Trigger.setPosition(trigger_retracted);
+        sleep(500);
+        sleep(1000);
+        Trigger.setPosition(trigger_extended);
+        sleep(850);
+        Trigger.setPosition(trigger_retracted);
+        sleep(500);
         launchLeft.setPower(0);
         launchRight.setPower(0);
 
+        runtime.reset();
+        while (opModeIsActive() && runtime.seconds() < 2.3){
+            leftDrive.setPower(0.30);
+            rightDrive.setPower(0.30);
+            // Adding telemetry data of our direction and run time
+            telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        /*
+        runtime.reset();
 
         while (opModeIsActive() && runtime.seconds() < 2){
             leftDrive.setPower(0.30);
@@ -148,12 +162,13 @@ public class BlueTargetB extends LinearOpMode {
             telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
+        runtime.reset();
 
         sleep(200);
         // Drop wobble goal
         servo.setPosition(0.25);
         sleep(200);
-
+        runtime.reset();
         while (opModeIsActive() && runtime.seconds() < 3){
             leftDrive.setPower(-0.30);
             rightDrive.setPower(-0.30);
@@ -161,6 +176,8 @@ public class BlueTargetB extends LinearOpMode {
             telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
         }
+
+         */
 
 
     }
