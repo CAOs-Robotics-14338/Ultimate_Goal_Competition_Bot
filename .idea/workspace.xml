@@ -39,7 +39,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/FtcRobotController-6.2" />
     <property name="settings.editor.selected.configurable" value="diff.base" />
   </component>
   <component name="SvnConfiguration">
@@ -68,6 +68,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="589" y="250" key="FileChooserDialogImpl" timestamp="1615141346924">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="589" y="250" key="FileChooserDialogImpl/1920.0.1920.1040/-1920.0.1920.1040/0.0.1920.1040@0.0.1920.1040" timestamp="1615141346924" />
     <state width="699" height="158" key="GridCell.Tab.0.bottom" timestamp="1614470558455">
       <screen x="0" y="25" width="1440" height="790" />
     </state>
