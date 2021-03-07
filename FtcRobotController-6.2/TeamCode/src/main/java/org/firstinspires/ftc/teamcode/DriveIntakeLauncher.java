@@ -34,8 +34,10 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
+import com.sun.tools.javac.tree.DCTree;
 
 
 /**
@@ -51,7 +53,7 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Drive Intake Launcher OpMode", group="Linear Opmode")
+@TeleOp(name="Main Launch and Drive OPmode", group="Linear Opmode")
 
 public class DriveIntakeLauncher extends LinearOpMode {
 
@@ -69,6 +71,10 @@ public class DriveIntakeLauncher extends LinearOpMode {
     /* LAUNCHER */
     private DcMotor launchLeft = null;
     private DcMotor launchRight = null;
+    private Servo Trigger = null;
+    double extended = 0.76;
+    double retracted = -0.86;
+    private Boolean isPressed = false;
 
     @Override
     public void runOpMode() {
@@ -92,6 +98,9 @@ public class DriveIntakeLauncher extends LinearOpMode {
         launchLeft = hardwareMap.get(DcMotor.class, "launch_left");;
         launchRight = hardwareMap.get(DcMotor.class, "launch_right");;
 
+        /* Trigger */
+        Trigger = hardwareMap.get(Servo.class, "trigger");
+
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -106,8 +115,8 @@ public class DriveIntakeLauncher extends LinearOpMode {
         intake.setDirection(CRServo.Direction.FORWARD); //Setting up so positive is intaking but negative is pushing the rings away
 
         /* LAUNCHER */
-        launchLeft.setDirection(DcMotor.Direction.FORWARD);
-        launchRight.setDirection(DcMotor.Direction.REVERSE);
+        launchLeft.setDirection(DcMotor.Direction.REVERSE);
+        launchRight.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -134,7 +143,7 @@ public class DriveIntakeLauncher extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double turn = gamepad1.left_stick_y; //-
+            double turn = -gamepad1.left_stick_y; //-
             double drive  =  gamepad1.right_stick_x;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
@@ -181,6 +190,19 @@ public class DriveIntakeLauncher extends LinearOpMode {
             else{
                 launchLeft.setPower(0);
                 launchRight.setPower(0);
+            }
+            if((gamepad1.right_bumper == true || gamepad1.left_bumper == true) && isPressed == false)
+            {
+                isPressed = true;
+                Trigger.setPosition(extended);
+                sleep(500);
+                Trigger.setPosition(retracted);
+
+            }
+
+            else
+            {
+                isPressed = false;
             }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

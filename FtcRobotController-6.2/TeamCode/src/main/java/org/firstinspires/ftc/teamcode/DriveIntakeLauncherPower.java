@@ -33,6 +33,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -69,6 +71,12 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
     private DcMotor launchLeft = null;
     private DcMotor launchRight = null;
 
+    /* TRIGGER */
+    private Servo Trigger = null;
+    private double trigger_extended = 0.76;
+    private double trigger_retracted = -0.86;
+    private Boolean isPressed = false;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -77,6 +85,7 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
         // Initialize the hardware variables. Note that the strings used here as parameters
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
+
         /* DRIVE */
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
@@ -90,6 +99,9 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
         /* LAUNCHER */
         launchLeft = hardwareMap.get(DcMotor.class, "launch_left");;
         launchRight = hardwareMap.get(DcMotor.class, "launch_right");;
+
+        /* TRIGGER */
+        Trigger = hardwareMap.get(Servo.class, "trigger");
 
 
         // Most robots need the motor on one side to be reversed to drive forward
@@ -105,8 +117,8 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
         intake.setDirection(CRServo.Direction.FORWARD); //Setting up so positive is intaking but negative is pushing the rings away
 
         /* LAUNCHER */
-        launchLeft.setDirection(DcMotor.Direction.FORWARD);
-        launchRight.setDirection(DcMotor.Direction.REVERSE);
+        launchLeft.setDirection(DcMotor.Direction.REVERSE);
+        launchRight.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -127,15 +139,15 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
             double intakePower = 1;
 
             /*LAUNCHER*/
-            double launchLow  = 0.5;
-            double launchHigh = 0.6;
+            double launchLow  = 0.40;
+            double launchHigh = 0.45;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double turn = gamepad1.left_stick_y; //-
+            double turn = -gamepad1.left_stick_y; //+
             double drive  =  gamepad1.right_stick_x;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
@@ -159,12 +171,6 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
                 intake.setPower(0);
                 conveyorBelt.setPower(0);
             }
-            if (gamepad1.x == true){
-                conveyorBelt.setPower(conveyorPower);
-            }
-            else if (gamepad1.y == true){
-                conveyorBelt.setPower(-conveyorPower);
-            }
 
             //LAUNCH SYSTEM
             if (gamepad1.left_bumper){
@@ -178,6 +184,19 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
             else{
                 launchLeft.setPower(0);
                 launchRight.setPower(0);
+            }
+
+            if(gamepad1.x && isPressed == false)
+            {
+                isPressed = true;
+                Trigger.setPosition(trigger_extended);
+                sleep(500);
+                Trigger.setPosition(trigger_retracted);
+
+            }
+            else
+            {
+                isPressed = false;
             }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

@@ -69,6 +69,8 @@ public class OmniDriveIntake extends LinearOpMode {
 
     private CRServo intake = null;
     private Servo trigger = null;
+    double extended = 0.76;
+    double retracted = -0.86;
 
     @Override
     public void runOpMode() {
@@ -94,8 +96,8 @@ public class OmniDriveIntake extends LinearOpMode {
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         centerDrive.setDirection(DcMotor.Direction.FORWARD);
-        launchRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        launchLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        launchRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        launchLeft.setDirection(DcMotorSimple.Direction.FORWARD);
 
 
         intake.setDirection(CRServo.Direction.FORWARD); //Setting up so positive is intaking but negative is pushing the rings away
@@ -168,21 +170,15 @@ public class OmniDriveIntake extends LinearOpMode {
 
             }
 
-            if(gamepad1.right_bumper == true && isPressed == false)
+            if((gamepad1.right_bumper == true || gamepad1.left_bumper == true) && isPressed == false)
             {
                 isPressed = true;
-                trigger.setPosition(1);
+                trigger.setPosition(extended);
                 sleep(500);
-                trigger.setPosition(-1);
+                trigger.setPosition(retracted);
 
             }
-            else if(gamepad1.left_bumper == true && isPressed == false)
-            {
-                isPressed = true;
-                trigger.setPosition(-1);
-                sleep(500);
-                trigger.setPosition(1);
-            }
+
             else
             {
                 isPressed = false;
