@@ -55,6 +55,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name="Wobble Goal OpMode", group="Linear Opmode")
 
+
 public class Wobble_OpMode extends LinearOpMode {
 
     // Declare OpMode members.
@@ -75,6 +76,7 @@ public class Wobble_OpMode extends LinearOpMode {
         servo = hardwareMap.get(Servo.class, "claw");
 
         wobbleGoal = new WobbleGoal(linearSlide, servo);
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -83,20 +85,44 @@ public class Wobble_OpMode extends LinearOpMode {
         while (opModeIsActive()) {
             if (gamepad1.y == true){
                 wobbleGoal.raiseWobbleGoal();
+                sleep(750);
+                wobbleGoal.stopGoal();
             }
             else if (gamepad1.x == true){
-               wobbleGoal.lowerWobbleGoal();
+                wobbleGoal.lowerWobbleGoal();
+                sleep(300);
+                wobbleGoal.stopGoal();
             }
-            else{
+            else if (gamepad1.back == true){
                 wobbleGoal.stopGoal();
             }
 
             /************SERVO ADVENTURES************/
-            if (gamepad1.right_bumper){
-                wobbleGoal.activateClaw();
+
+            /**
+             *  double lift = 0;
+             *     double grab = 0.25;
+             *     double stow = 0.5;
+             */
+            if (gamepad1.b){
+                //wobbleGoal.activateClaw();
+                servo.setPosition(0.25);
+                // Angle to grab
+            }
+            else if (gamepad1.a){
+                //wobbleGoal.storeClaw();
+                servo.setPosition(0.5);
+                // Stow
+            }
+            else if (gamepad1.right_stick_button){
+                servo.setPosition(0.75);
+            }
+            else if (gamepad1.right_bumper){
+                servo.setPosition(1);
             }
             else if (gamepad1.left_bumper){
-                wobbleGoal.storeClaw();
+                servo.setPosition(0);
+                // position to lift up wobble
             }
 
         }

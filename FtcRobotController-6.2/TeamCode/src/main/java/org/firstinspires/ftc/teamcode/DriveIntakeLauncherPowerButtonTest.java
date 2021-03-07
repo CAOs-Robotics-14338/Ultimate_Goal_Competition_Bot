@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
@@ -69,6 +70,11 @@ public class DriveIntakeLauncherPowerButtonTest extends LinearOpMode {
     private DcMotor launchLeft = null;
     private DcMotor launchRight = null;
 
+    /* WOBBLE GOAL */
+    private DcMotor linearSlide = null;
+    private Servo servo = null;
+    private WobbleGoal wobbleGoal = null;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -91,6 +97,12 @@ public class DriveIntakeLauncherPowerButtonTest extends LinearOpMode {
         launchLeft = hardwareMap.get(DcMotor.class, "launch_left");;
         launchRight = hardwareMap.get(DcMotor.class, "launch_right");;
 
+        /* WOBBLE GOAL */
+        linearSlide  = hardwareMap.get(DcMotor.class, "slide");
+        servo = hardwareMap.get(Servo.class, "claw");
+
+        wobbleGoal = new WobbleGoal(linearSlide, servo);
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -184,6 +196,55 @@ public class DriveIntakeLauncherPowerButtonTest extends LinearOpMode {
                 launchLeft.setPower(0);
                 launchRight.setPower(0);
             }
+
+
+                if (gamepad2.y == true){
+                    wobbleGoal.raiseWobbleGoal();
+                    sleep(750);
+                    wobbleGoal.stopGoal();
+                }
+                else if (gamepad2.a == true){
+                    wobbleGoal.lowerWobbleGoal();
+                    sleep(300);
+                    wobbleGoal.stopGoal();
+                }
+                //else if (gamepad1.back == true){
+                //    wobbleGoal.stopGoal();
+                //}
+
+                /************SERVO ADVENTURES************/
+
+                /**
+                 *  double lift = 0;
+                 *     double grab = 0.25;
+                 *     double stow = 0.5;
+                 */
+                if (gamepad2.x){
+                    //wobbleGoal.activateClaw();
+                    servo.setPosition(0.25);
+                    // Angle to grab
+                }
+                else if (gamepad1.back){
+                    //wobbleGoal.storeClaw();
+                    servo.setPosition(0.5);
+                    // Stow
+                }
+                // else if (gamepad1.right_stick_button){
+                //    servo.setPosition(0.75);
+                // }
+                // else if (gamepad1.right_bumper){
+                //    servo.setPosition(1);
+                //}
+                if(gamepad2.back)
+                {
+                    servo.setPosition(-1);
+                }
+                else if (gamepad2.b){
+                    servo.setPosition(0);
+                    // position to lift up wobble
+                }
+
+
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());
             telemetry.addData("Motors", "left (%.2f), right (%.2f), center (%.2f)", leftPower, rightPower, centerPower);
