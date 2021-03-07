@@ -77,6 +77,11 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
     private double trigger_retracted = -0.86;
     private Boolean isPressed = false;
 
+    /*WOBBLE GOAL*/
+    private DcMotor linearSlide = null;
+    private Servo servo = null;
+    private WobbleGoal wobbleGoal = null;
+
     @Override
     public void runOpMode() {
         telemetry.addData("Status", "Initialized");
@@ -103,6 +108,10 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
         /* TRIGGER */
         Trigger = hardwareMap.get(Servo.class, "trigger");
 
+        /* WOBBLE GOAL*/
+        linearSlide  = hardwareMap.get(DcMotor.class, "slide");
+        servo = hardwareMap.get(Servo.class, "claw");
+        wobbleGoal = new WobbleGoal(linearSlide, servo);
 
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
@@ -110,6 +119,10 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
         centerDrive.setDirection(DcMotor.Direction.REVERSE);
+
+        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        centerDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         /* INTAKE */
         conveyorBelt.setDirection(DcMotor.Direction.FORWARD);
@@ -119,6 +132,9 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
         /* LAUNCHER */
         launchLeft.setDirection(DcMotor.Direction.REVERSE);
         launchRight.setDirection(DcMotor.Direction.FORWARD);
+
+        /* WOBBLE GOAL */
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -147,7 +163,9 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
 
             // POV Mode uses left stick to go forward, and right stick to turn.
             // - This uses basic math to combine motions and is easier to drive straight.
-            double turn = -gamepad1.left_stick_y; //+
+
+            //DRIVE
+            double turn = -gamepad1.left_stick_y * 0.5; //+
             double drive  =  gamepad1.right_stick_x;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
@@ -159,11 +177,11 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
             centerDrive.setPower(centerPower);
 
             //INTAKE SYSTEM
-            if (gamepad1.a == true){
+            if (gamepad1.a  || gamepad2.right_bumper ){
                 intake.setPower(intakePower);
                 conveyorBelt.setPower(conveyorPower);
             }
-            else if (gamepad1.b == true){
+            else if (gamepad1.b || gamepad2.left_bumper){
                 intake.setPower(-intakePower);
                 conveyorBelt.setPower(-conveyorPower);
             }
@@ -185,18 +203,36 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
                 launchLeft.setPower(0);
                 launchRight.setPower(0);
             }
-
+            //TRIGGER
             if(gamepad1.x && isPressed == false)
             {
                 isPressed = true;
                 Trigger.setPosition(trigger_extended);
                 sleep(500);
                 Trigger.setPosition(trigger_retracted);
-
             }
             else
             {
                 isPressed = false;
+            }
+            //WOBBLE GOAL
+            if (gamepad2.x){
+                wobbleGoal.activateClaw();
+            }
+            else if (gamepad2.b){
+                wobbleGoal.setliftClawPosition();
+            }
+            else if (gamepad2.back){
+                wobbleGoal.storeClaw();
+            }
+            if (gamepad2.y){
+                wobbleGoal.raiseWobbleGoal();
+            }
+            else if (gamepad2.a){
+                wobbleGoal.lowerWobbleGoal();
+            }
+            else {
+                wobbleGoal.stopGoal();
             }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import static java.lang.Thread.sleep;
+
 public class WobbleGoal {
     // Set up Hardware Devices
     /* Motors */
@@ -25,6 +27,7 @@ public class WobbleGoal {
     public WobbleGoal(DcMotor linearSlide, Servo servo){
         linSlide = linearSlide;
         claw = servo;
+        linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
     //Methods
 
@@ -54,6 +57,7 @@ public class WobbleGoal {
     }
     public void stopGoal(){ linSlide.setPower(0);}
     public void deliverWobbleGoal(){
+        //autonomous??
         //lower linear slide timed, encodered, ....??
         //move claw to its stored position
     }
