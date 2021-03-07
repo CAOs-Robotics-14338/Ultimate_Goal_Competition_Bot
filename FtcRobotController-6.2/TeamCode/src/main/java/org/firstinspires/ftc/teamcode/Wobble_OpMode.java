@@ -83,6 +83,7 @@ public class Wobble_OpMode extends LinearOpMode {
 
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
+            /***** LINEAR SLIDE ******/
             if (gamepad1.y == true){
                 wobbleGoal.raiseWobbleGoal();
                 sleep(750);
@@ -99,20 +100,12 @@ public class Wobble_OpMode extends LinearOpMode {
 
             /************SERVO ADVENTURES************/
 
-            /**
-             *  double lift = 0;
-             *     double grab = 0.25;
-             *     double stow = 0.5;
-             */
+
             if (gamepad1.b){
-                //wobbleGoal.activateClaw();
-                servo.setPosition(0.25);
-                // Angle to grab
+                wobbleGoal.activateClaw();
             }
             else if (gamepad1.a){
-                //wobbleGoal.storeClaw();
-                servo.setPosition(0.5);
-                // Stow
+                wobbleGoal.storeClaw();
             }
             else if (gamepad1.right_stick_button){
                 servo.setPosition(0.75);

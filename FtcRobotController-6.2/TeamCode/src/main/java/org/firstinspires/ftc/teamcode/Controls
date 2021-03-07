@@ -1,0 +1,89 @@
+Controls
+
+General:
+    Drive:
+        Forward/Backward - Joystick Axis
+        Left/Right - Joystock Axis
+        Turn - Joystick Axis
+
+    Intake ( Intake wheels && Conveyor ) :
+        Ring in - Button
+        Ring out/reverse - Button
+
+    Launcher (Launch Wheels && Trigger):
+        Launch Wheels Control:
+            Low Speed - Bumper
+            High Speed - Bumper
+        Trigger:
+            Trigger - Button
+
+    Wobble Goal:
+        Claw:
+            StorePosition - Button
+            Grab Position - Button
+            Lift Position - Button
+        Linear Slide:
+            LiftGoal - Button
+            LowerGoal - Button
+
+Sorted:
+    Gamepad 1:
+        Drive:
+            Forward/Backward - Joystick Axis
+            Left/Right - Joystock Axis
+            Turn - Joystick Axis
+
+        Intake ( Intake wheels && Conveyor ) :
+             Ring in - Button
+             Ring out/reverse - Button
+
+        Launcher (Launch Wheels && Trigger):
+            Launch Wheels Control:
+                Low Speed - Bumper
+                High Speed - Bumper
+            Trigger:
+                Trigger - Button
+
+    Gamepad 2:
+        Override Intake ( Intake wheels && Conveyor ) :
+             Ring in - Button
+             Ring out/reverse - Button
+        Wobble Goal:
+            Claw:
+                StorePosition - Button
+                Grab Position - Button
+                Lift Position - Button
+            Linear Slide:
+                LiftGoal - Button
+                LowerGoal - Button
+
+Assigned:
+    Gamepad 1:
+        Drive:
+            Forward/Backward - Left Y Axis
+            Left/Right - Left X Axis
+            Turn - Right X Axis
+
+        Intake ( Intake wheels && Conveyor ) :
+             Ring in - Button A
+             Ring out/reverse - Button B
+
+        Launcher (Launch Wheels && Trigger):
+            Launch Wheels Control:
+                Low Speed - Left Bumper
+                High Speed - Right Bumper
+            Trigger:
+                Trigger - Button X
+
+    Gamepad 2:
+        Override Intake ( Intake wheels && Conveyor ) :
+             Ring in - Right Bumper
+             Ring out/reverse - Left Bumper
+        Wobble Goal:
+            Claw:
+                StorePosition - Button Back
+                Grab Position - Button X
+                Lift Position - Button B
+            Linear Slide:
+                LiftGoal - Button Y
+                LowerGoal - Button A
