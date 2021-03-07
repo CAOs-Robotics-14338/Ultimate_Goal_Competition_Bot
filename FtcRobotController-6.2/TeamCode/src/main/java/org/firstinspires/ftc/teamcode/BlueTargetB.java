@@ -45,9 +45,17 @@ public class BlueTargetB extends LinearOpMode {
     private double trigger_extended = 0.76;
     private double trigger_retracted = -0.86;
     private Boolean isPressed = false;
+
+    /* GYRO */
     BNO055IMU               imu;
     Orientation lastAngles = new Orientation();
     gyro Gyro;
+
+
+    /* WOBBLE */
+    private DcMotor linearSlide = null;
+    private Servo servo = null;
+    private WobbleGoal wobbleGoal = null;
 
     // Starting OPMode
     @Override
@@ -94,6 +102,13 @@ public class BlueTargetB extends LinearOpMode {
         launchLeft.setDirection(DcMotor.Direction.REVERSE);
         launchRight.setDirection(DcMotor.Direction.FORWARD);
 
+        /* WOBBLE GOAL */
+        linearSlide  = hardwareMap.get(DcMotor.class, "slide");
+        servo = hardwareMap.get(Servo.class, "claw");
+
+        wobbleGoal = new WobbleGoal(linearSlide, servo);
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -101,9 +116,47 @@ public class BlueTargetB extends LinearOpMode {
 
 
         // Drive forward to the goal
-        while (opModeIsActive() && runtime.seconds() < 3){
+        while (opModeIsActive() && runtime.seconds() < 2){
             leftDrive.setPower(0.30);
             rightDrive.setPower(0.30);
+            // Adding telemetry data of our direction and run time
+            telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        Gyro.rotate(25,0.3);
+        sleep(200);
+        // Launch
+        launchLeft.setPower(0.35);
+        launchRight.setPower(0.35);
+        sleep(1000);
+        for(int i = 0; i < 3; i++)
+        {
+            Trigger.setPosition(trigger_extended);
+            sleep(850);
+            Trigger.setPosition(trigger_retracted);
+            sleep(500);
+        }
+        launchLeft.setPower(0);
+        launchRight.setPower(0);
+
+
+        while (opModeIsActive() && runtime.seconds() < 2){
+            leftDrive.setPower(0.30);
+            rightDrive.setPower(0.30);
+            // Adding telemetry data of our direction and run time
+            telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
+            telemetry.update();
+        }
+
+        sleep(200);
+        // Drop wobble goal
+        servo.setPosition(0.25);
+        sleep(200);
+
+        while (opModeIsActive() && runtime.seconds() < 3){
+            leftDrive.setPower(-0.30);
+            rightDrive.setPower(-0.30);
             // Adding telemetry data of our direction and run time
             telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
             telemetry.update();
