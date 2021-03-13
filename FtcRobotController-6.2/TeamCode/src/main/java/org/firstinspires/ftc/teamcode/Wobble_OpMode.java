@@ -54,7 +54,7 @@ import com.qualcomm.robotcore.hardware.Servo;
  */
 
 @TeleOp(name="Wobble Goal OpMode", group="Linear Opmode")
-
+@Disabled
 
 public class Wobble_OpMode extends LinearOpMode {
 
@@ -111,10 +111,10 @@ public class Wobble_OpMode extends LinearOpMode {
                 servo.setPosition(0.75);
             }
             else if (gamepad1.right_bumper){
-                servo.setPosition(1);
+                servo.setPosition(1); //grab
             }
             else if (gamepad1.left_bumper){
-                servo.setPosition(0);
+                servo.setPosition(0); //store
                 // position to lift up wobble
             }
 

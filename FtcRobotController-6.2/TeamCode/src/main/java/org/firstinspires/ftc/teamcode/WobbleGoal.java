@@ -19,9 +19,9 @@ public class WobbleGoal {
      *     double grab = 0.25;
      *     double stow = 0.5;
      */
-    double lift = 0;
-    double grab = 0.25;
-    double stow = 0.5;
+    double lift = 0.5;
+    double grab = 1;
+    double stow = 0;
 
     //Constructors
     public WobbleGoal(DcMotor linearSlide, Servo servo){
