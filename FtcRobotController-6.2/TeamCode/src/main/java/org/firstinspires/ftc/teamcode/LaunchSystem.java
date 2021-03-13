@@ -18,7 +18,6 @@ public class LaunchSystem {
     double trigger_extended = 0.76;
     double trigger_retracted = -0.86;
 
-    Boolean isPressed = false;
 
 
     public LaunchSystem(DcMotor rightLancherMotor, DcMotor leftLauncherMotor, Servo triggerServo){
@@ -43,9 +42,10 @@ public class LaunchSystem {
         launchRight.setPower(0);
     }
 
-    public void triggerLaunch() throws InterruptedException {
+    public void triggerLaunch(){
         trigger.setPosition(trigger_extended);
-        TimeUnit.MILLISECONDS.sleep(500);
+    }
+    public void triggerBack(){
         trigger.setPosition(trigger_retracted);
     }
 

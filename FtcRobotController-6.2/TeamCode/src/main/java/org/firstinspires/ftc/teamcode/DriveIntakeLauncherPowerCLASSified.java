@@ -52,9 +52,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Drive Intake Launcher Power Options OpMode", group="Linear Opmode")
+@TeleOp(name="Class-Based Tele-Op", group="Linear Opmode")
 
-public class DriveIntakeLauncherPower extends LinearOpMode {
+public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -62,25 +62,27 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotor centerDrive = null;
+
     /* INTAKE */
     private DcMotor conveyorBelt = null;
-
     private CRServo intake = null;
+    Intake intakeSystem = null;
 
     /* LAUNCHER */
     private DcMotor launchLeft = null;
     private DcMotor launchRight = null;
-
     /* TRIGGER */
-    private Servo Trigger = null;
-    private double trigger_extended = 0.76;
-    private double trigger_retracted = -0.86;
-    private Boolean isPressed = false;
+    private Servo trigger = null;
+    LaunchSystem launchSystem = null;
+
+
+
 
     /*WOBBLE GOAL*/
     private DcMotor linearSlide = null;
     private Servo servo = null;
     private WobbleGoal wobbleGoal = null;
+
 
     @Override
     public void runOpMode() {
@@ -98,15 +100,19 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
 
         /* INTAKE */
         conveyorBelt = hardwareMap.get(DcMotor.class, "belt");
-
         intake = hardwareMap.get(CRServo.class, "intake");
+        intakeSystem = new Intake(conveyorBelt, intake);
+
+
 
         /* LAUNCHER */
         launchLeft = hardwareMap.get(DcMotor.class, "launch_left");;
         launchRight = hardwareMap.get(DcMotor.class, "launch_right");;
-
         /* TRIGGER */
-        Trigger = hardwareMap.get(Servo.class, "trigger");
+        trigger = hardwareMap.get(Servo.class, "trigger");
+        launchSystem = new LaunchSystem(launchRight, launchLeft, trigger);
+
+        Boolean isPressed = false;
 
         /* WOBBLE GOAL*/
         linearSlide  = hardwareMap.get(DcMotor.class, "slide");
@@ -124,18 +130,6 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
         rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         centerDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        /* INTAKE */
-        conveyorBelt.setDirection(DcMotor.Direction.FORWARD);
-
-        intake.setDirection(CRServo.Direction.FORWARD); //Setting up so positive is intaking but negative is pushing the rings away
-
-        /* LAUNCHER */
-        launchLeft.setDirection(DcMotor.Direction.REVERSE);
-        launchRight.setDirection(DcMotor.Direction.FORWARD);
-
-        /* WOBBLE GOAL */
-        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
         runtime.reset();
@@ -148,15 +142,6 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
             double leftPower;
             double rightPower;
             double centerPower;
-
-            /*INTAKE*/
-            double conveyorPower = 1;
-
-            double intakePower = 1;
-
-            /*LAUNCHER*/
-            double launchLow  = 0.40;
-            double launchHigh = 0.45;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -178,43 +163,34 @@ public class DriveIntakeLauncherPower extends LinearOpMode {
 
             //INTAKE SYSTEM
             if (gamepad1.a  || gamepad2.right_bumper ){
-                intake.setPower(intakePower);
-                conveyorBelt.setPower(conveyorPower);
+                intakeSystem.intake();
             }
             else if (gamepad1.b || gamepad2.left_bumper){
-                intake.setPower(-intakePower);
-                conveyorBelt.setPower(-conveyorPower);
+                intakeSystem.outtake();
             }
             else{
-                intake.setPower(0);
-                conveyorBelt.setPower(0);
+                intakeSystem.stop();
             }
 
             //LAUNCH SYSTEM
             if (gamepad1.left_bumper){
-                launchRight.setPower(launchLow);
-                launchLeft.setPower(launchLow);
+                launchSystem.launchWheelsToLOWPower();
             }
             else if (gamepad1.right_bumper){
-                launchLeft.setPower(launchHigh);
-                launchRight.setPower(launchHigh);
+                launchSystem.launchWheelsToHIGHPower();
             }
             else{
-                launchLeft.setPower(0);
-                launchRight.setPower(0);
+                launchSystem.noLaunchWheels();
             }
-            //TRIGGER
-            if(gamepad1.x && isPressed == false)
-            {
-                isPressed = true;
-                Trigger.setPosition(trigger_extended);
+            if (gamepad1.x && isPressed == false){
+                launchSystem.triggerLaunch();
                 sleep(500);
-                Trigger.setPosition(trigger_retracted);
+                launchSystem.triggerBack();
             }
-            else
-            {
+            else{
                 isPressed = false;
             }
+
             //WOBBLE GOAL
             if (gamepad2.x){
                 wobbleGoal.activateClaw();
