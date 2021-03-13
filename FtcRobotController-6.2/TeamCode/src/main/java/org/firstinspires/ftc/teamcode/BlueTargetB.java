@@ -123,8 +123,8 @@ public class BlueTargetB extends LinearOpMode {
         rightDrive.setPower(0);
         sleep(500);
         // Launch
-        launchLeft.setPower(0.45);
-        launchRight.setPower(0.45);
+        launchLeft.setPower(0.38);
+        launchRight.setPower(0.38);
         sleep(1000);
         Trigger.setPosition(trigger_extended);
         sleep(850);
@@ -144,7 +144,7 @@ public class BlueTargetB extends LinearOpMode {
         launchRight.setPower(0);
 
         runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < 2.3){
+        while (opModeIsActive() && runtime.seconds() < 2.5){
             leftDrive.setPower(0.30);
             rightDrive.setPower(0.30);
             // Adding telemetry data of our direction and run time
