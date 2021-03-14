@@ -39,6 +39,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+
 
 /**
  * This file contains an minimal example of a Linear "OpMode". An OpMode is a 'program' that runs in either
@@ -53,9 +55,9 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="Class-Based Tele-Op", group="Linear Opmode")
+@TeleOp(name="EncoderTestOp", group="Linear Opmode")
 
-public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
+public class EncoderTestOp extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
@@ -109,6 +111,10 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
         /* LAUNCHER */
         launchLeft = hardwareMap.get(DcMotorEx.class, "launch_left");;
         launchRight = hardwareMap.get(DcMotorEx.class, "launch_right");;
+        launchRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        launchLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+
+
         /* TRIGGER */
         trigger = hardwareMap.get(Servo.class, "trigger");
         launchSystem = new LaunchSystem(launchRight, launchLeft, trigger);
@@ -175,10 +181,15 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
 
             //LAUNCH SYSTEM
             if (gamepad1.left_bumper){
-                launchSystem.launchWheelsToLOWPower();
+                //launchSystem.launchWheelsToLOWPower();
+                launchLeft.setVelocity(121.5, AngleUnit.DEGREES);
+                launchRight.setVelocity(121.5, AngleUnit.DEGREES);
+
             }
             else if (gamepad1.right_bumper){
-                launchSystem.launchWheelsToHIGHPower();
+                //launchSystem.launchWheelsToHIGHPower();
+                launchLeft.setVelocity(130, AngleUnit.DEGREES);
+                launchRight.setVelocity(130, AngleUnit.DEGREES);
             }
             else{
                 launchSystem.noLaunchWheels();
@@ -212,7 +223,7 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
                 wobbleGoal.stopGoal();
             }
             // Show the elapsed game time and wheel power.
-            telemetry.addData("Status", "Run Time: " + runtime.toString());
+            telemetry.addData("Left Launch Encoder Ticks", launchLeft.getCurrentPosition());
             telemetry.addData("Motors", "left (%.2f), right (%.2f), center (%.2f)", leftPower, rightPower, centerPower);
             telemetry.update();
         }
