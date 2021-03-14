@@ -1,17 +1,21 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 import java.util.concurrent.TimeUnit;
 
 public class LaunchSystem {
 
     /* LAUNCHER */
-    DcMotor launchLeft, launchRight;
+    DcMotorEx launchLeft, launchRight;
     double launchLow  = 0.40;
     double launchHigh = 0.45;
+    // TicksPerRevolution
 
     /* TRIGGER */
     Servo trigger;
@@ -20,22 +24,42 @@ public class LaunchSystem {
 
 
 
-    public LaunchSystem(DcMotor rightLancherMotor, DcMotor leftLauncherMotor, Servo triggerServo){
+    /*
+    public LaunchSystem(DcMotor rightLauncherMotor, DcMotor leftLauncherMotor, Servo triggerServo){
         this.launchLeft = leftLauncherMotor;
-        this.launchRight = rightLancherMotor;
+        this.launchRight = rightLauncherMotor;
         this.trigger = triggerServo;
 
         launchLeft.setDirection(DcMotor.Direction.REVERSE);
         launchRight.setDirection(DcMotor.Direction.FORWARD);
+
+
+    }
+
+     */
+
+    public LaunchSystem(DcMotorEx rightLauncherMotor, DcMotorEx leftLauncherMotor, Servo triggerServo)
+    {
+        this.launchLeft = leftLauncherMotor;
+        this.launchRight = rightLauncherMotor;
+        this.trigger = triggerServo;
+
+
+
+        launchLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        launchRight.setDirection(DcMotorEx.Direction.FORWARD);
+        launchLeft.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        launchRight.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
     }
 
     public void launchWheelsToHIGHPower(){
-        launchLeft.setPower(launchHigh);
-        launchRight.setPower(launchHigh);
+        launchLeft.setVelocity(130, AngleUnit.DEGREES);
+        launchRight.setVelocity(130, AngleUnit.DEGREES);
     }
     public void launchWheelsToLOWPower(){
-        launchRight.setPower(launchLow);
-        launchLeft.setPower(launchLow);
+        launchLeft.setVelocity(121.5, AngleUnit.DEGREES);
+        launchRight.setVelocity(121.5, AngleUnit.DEGREES);
     }
     public void noLaunchWheels(){
         launchLeft.setPower(0);
