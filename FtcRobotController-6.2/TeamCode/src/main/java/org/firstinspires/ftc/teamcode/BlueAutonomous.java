@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode;
 
 //Importing required classes
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.hardware.bosch.BNO055IMU;
+
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -53,9 +55,11 @@ public class BlueAutonomous extends LinearOpMode {
     private Boolean isPressed = false;
 
     /* GYRO */
-    BNO055IMU               imu;
-    Orientation lastAngles = new Orientation();
     gyro Gyro;
+    BNO055IMU imu;
+
+    Orientation lastAngles = new Orientation();
+    double                  globalAngle, power = .30, correction;
 
 
     // Starting OPMode
@@ -152,7 +156,7 @@ public class BlueAutonomous extends LinearOpMode {
         // Reverse the motor that runs backwards when connected directly to the battery
         /* DRIVE */
         leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightDrive.setDirection(DcMotor.Direction.FORWARD);
         centerDrive.setDirection(DcMotor.Direction.REVERSE);
 
         leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -173,18 +177,8 @@ public class BlueAutonomous extends LinearOpMode {
 
         imu.initialize(parameters);
 
-        telemetry.addData("Mode", "calibrating...");
-        telemetry.update();
+        Gyro = new gyro(leftDrive, rightDrive, imu);
 
-        // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !imu.isGyroCalibrated())
-        {
-            sleep(50);
-            idle();
-        }
-        // Wait for the game to start (driver presses PLAY)
-
-        /* End of IMU */
 
         waitForStart();
         runtime.reset();
@@ -192,7 +186,7 @@ public class BlueAutonomous extends LinearOpMode {
 
 
         // Drive forward to the launching position
-        while (opModeIsActive() && runtime.seconds() < 3.2){
+        while (opModeIsActive() && runtime.seconds() < 3.5){
             leftDrive.setPower(0.30);
             rightDrive.setPower(0.30);
             // Adding telemetry data of our direction and run time
@@ -203,7 +197,7 @@ public class BlueAutonomous extends LinearOpMode {
         leftDrive.setPower(0);
         rightDrive.setPower(0);
 
-        Gyro.rotate(15, 0.2);
+        Gyro.rotate(-12, 0.2);
         sleep(500);
         // Launch
         launchSystem.launchWheelsToLOWPower();
@@ -236,6 +230,7 @@ public class BlueAutonomous extends LinearOpMode {
         rightDrive.setPower(0);
         sleep(200);
         wobbleGoal.activateClaw();
+        sleep(500);
 
         /*
         runtime.reset();
