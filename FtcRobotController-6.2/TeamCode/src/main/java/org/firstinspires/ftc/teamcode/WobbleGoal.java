@@ -28,6 +28,7 @@ public class WobbleGoal {
         linSlide = linearSlide;
         claw = servo;
         linSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        this.storeClaw();
     }
     //Methods
 
