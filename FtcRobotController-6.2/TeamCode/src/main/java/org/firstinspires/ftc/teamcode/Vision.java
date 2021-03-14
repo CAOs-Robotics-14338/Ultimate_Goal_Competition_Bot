@@ -104,7 +104,7 @@ public class Vision extends LinearOpMode
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(181,98); //y:98
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(280,115); //x:181 y:98
 
         static final int REGION_WIDTH = 35;
         static final int REGION_HEIGHT = 25;
