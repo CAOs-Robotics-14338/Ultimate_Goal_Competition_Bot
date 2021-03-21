@@ -100,6 +100,12 @@ public class EncoderTestOp extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         centerDrive = hardwareMap.get(DcMotor.class, "center_drive");
+        leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
 
         /* INTAKE */
         conveyorBelt = hardwareMap.get(DcMotor.class, "belt");
@@ -225,6 +231,9 @@ public class EncoderTestOp extends LinearOpMode {
             // Show the elapsed game time and wheel power.
             telemetry.addData("Left Launch Encoder Ticks", launchLeft.getCurrentPosition());
             telemetry.addData("Motors", "left (%.2f), right (%.2f), center (%.2f)", leftPower, rightPower, centerPower);
+            telemetry.addData("Motor Encoders", "left -- " + leftDrive.getCurrentPosition() +   " right " + rightDrive.getCurrentPosition());
+
+
             telemetry.update();
         }
     }

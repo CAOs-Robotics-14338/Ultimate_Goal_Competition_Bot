@@ -25,10 +25,14 @@ public class BlueAutonomous extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+
     /* DRIVE */
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotor centerDrive = null;
+    HDrive hdrive = null;
+
+    // Left 2847   Right -2845
 
     /* INTAKE */
     private DcMotor conveyorBelt = null;
@@ -77,35 +81,11 @@ public class BlueAutonomous extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         centerDrive = hardwareMap.get(DcMotor.class, "center_drive");
-
-        /* INTAKE */
-        conveyorBelt = hardwareMap.get(DcMotor.class, "belt");
-
-        intake = hardwareMap.get(CRServo.class, "intake");
-
-        /* LAUNCHER */
-        launchLeft = hardwareMap.get(DcMotorEx.class, "launch_left");;
-        launchRight = hardwareMap.get(DcMotorEx.class, "launch_right");;
-
-        /* TRIGGER */
-        trigger = hardwareMap.get(Servo.class, "trigger");
+        hdrive = new HDrive(leftDrive, rightDrive, centerDrive, 'y');
 
 
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        /* DRIVE */
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
-        centerDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        /* INTAKE */
-        conveyorBelt.setDirection(DcMotor.Direction.FORWARD);
 
-        intake.setDirection(CRServo.Direction.FORWARD); //Setting up so positive is intaking but negative is pushing the rings away
-
-        /* LAUNCHER */
-        launchLeft.setDirection(DcMotor.Direction.REVERSE);
-        launchRight.setDirection(DcMotor.Direction.FORWARD);
 
         /* WOBBLE GOAL */
         linearSlide  = hardwareMap.get(DcMotor.class, "slide");
@@ -122,10 +102,6 @@ public class BlueAutonomous extends LinearOpMode {
         // to 'get' must correspond to the names assigned during the robot configuration
         // step (using the FTC Robot Controller app on the phone).
 
-        /* DRIVE */
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        centerDrive = hardwareMap.get(DcMotor.class, "center_drive");
 
         /* INTAKE */
         conveyorBelt = hardwareMap.get(DcMotor.class, "belt");
@@ -152,16 +128,21 @@ public class BlueAutonomous extends LinearOpMode {
         servo = hardwareMap.get(Servo.class, "claw");
         wobbleGoal = new WobbleGoal(linearSlide, servo);
 
+        /* INTAKE */
+        conveyorBelt.setDirection(DcMotor.Direction.FORWARD);
+
+        intake.setDirection(CRServo.Direction.FORWARD); //Setting up so positive is intaking but negative is pushing the rings away
+
+        /* LAUNCHER */
+        launchLeft.setDirection(DcMotorEx.Direction.REVERSE);
+        launchRight.setDirection(DcMotorEx.Direction.FORWARD);
+
         // Most robots need the motor on one side to be reversed to drive forward
         // Reverse the motor that runs backwards when connected directly to the battery
         /* DRIVE */
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.FORWARD);
-        centerDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        centerDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
 
         /* IMU */
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -180,9 +161,55 @@ public class BlueAutonomous extends LinearOpMode {
         Gyro = new gyro(leftDrive, rightDrive, imu);
 
 
+
         waitForStart();
         runtime.reset();
 
+
+        leftDrive.setTargetPosition(2750);
+        rightDrive.setTargetPosition(-2780);
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        leftDrive.setPower(0.4);
+        rightDrive.setPower(0.4);
+
+        while(leftDrive.isBusy() || rightDrive.isBusy()){}
+
+
+
+        // Launching 3 rings at low power into the high goal
+        launchSystem.launchWheelsToLOWPower();
+        sleep(2500);
+        launchSystem.triggerLaunch();
+        sleep(900);
+        launchSystem.triggerBack();
+        sleep(1500);
+        launchSystem.triggerLaunch();
+        sleep(900);
+        launchSystem.triggerBack();
+        sleep(1500);
+        launchSystem.triggerLaunch();
+        sleep(900);
+        launchSystem.triggerBack();
+        launchSystem.noLaunchWheels();
+
+        launchRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        launchLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
+        leftDrive.setTargetPosition(200);
+        rightDrive.setTargetPosition(-200);
+        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        while(leftDrive.isBusy() || rightDrive.isBusy()){}
+
+        leftDrive.setPower(0.4);
+        rightDrive.setPower(0.4);
+        wobbleGoal.deliverWobbleGoal();
+
+
+
+
+/*
 
 
         // Drive forward to the launching position

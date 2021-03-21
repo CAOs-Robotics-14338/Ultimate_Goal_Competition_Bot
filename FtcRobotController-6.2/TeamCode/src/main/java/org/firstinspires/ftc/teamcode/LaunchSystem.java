@@ -19,24 +19,10 @@ public class LaunchSystem {
 
     /* TRIGGER */
     Servo trigger;
-    double trigger_extended = 0.76;
-    double trigger_retracted = -0.86;
+    double trigger_extended = 0.87;
+    double trigger_retracted = -0.80;
 
 
-
-    /*
-    public LaunchSystem(DcMotor rightLauncherMotor, DcMotor leftLauncherMotor, Servo triggerServo){
-        this.launchLeft = leftLauncherMotor;
-        this.launchRight = rightLauncherMotor;
-        this.trigger = triggerServo;
-
-        launchLeft.setDirection(DcMotor.Direction.REVERSE);
-        launchRight.setDirection(DcMotor.Direction.FORWARD);
-
-
-    }
-
-     */
 
     public LaunchSystem(DcMotorEx rightLauncherMotor, DcMotorEx leftLauncherMotor, Servo triggerServo)
     {
@@ -66,11 +52,14 @@ public class LaunchSystem {
         launchRight.setPower(0);
     }
 
+
     public void triggerLaunch(){
         trigger.setPosition(trigger_extended);
     }
     public void triggerBack(){
         trigger.setPosition(trigger_retracted);
     }
+
+
 
 }
