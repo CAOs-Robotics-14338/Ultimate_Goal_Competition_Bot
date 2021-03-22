@@ -78,12 +78,9 @@ public class BlueAutonomous extends LinearOpMode {
     private double trigger_extended = 0.76;
     private double trigger_retracted = -0.86;
     private Boolean isPressed = false;
-<<<<<<< HEAD
     private int pos;
-=======
 
     private int position = 2;
->>>>>>> 6c72f4d865e8173711a21b2d7e1f4dcc1b53a471
 
     /* GYRO */
     gyro Gyro;
