@@ -57,7 +57,8 @@ public class BlueAutonomous extends LinearOpMode {
     private double trigger_extended = 0.76;
     private double trigger_retracted = -0.86;
     private Boolean isPressed = false;
-    private int position;
+
+    private int position = 2;
 
     /* GYRO */
     gyro Gyro;
@@ -197,12 +198,14 @@ public class BlueAutonomous extends LinearOpMode {
         }
         if(position == 2)
         {
-            hdrive.driveInches(18, 18, 0.4);
+            hdrive.driveInches(40, 8, 0.4);
             sleep(400);
             wobbleGoal.activateClaw();
             sleep(400);
-            hdrive.driveInches(-12, -12, -0.4);
+            hdrive.driveInches(32, 4, 0.4);
             sleep(400);
+            hdrive.driveInches(18, 18, 0.4);
+            sleep(200);
         }
 
 
