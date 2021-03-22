@@ -12,8 +12,32 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.gyro;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvPipeline;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.opencv.core.Core;
+import org.opencv.core.Mat;
+import org.opencv.core.Point;
+import org.opencv.core.Rect;
+import org.opencv.core.Scalar;
+import org.opencv.imgproc.Imgproc;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+import org.openftc.easyopencv.OpenCvInternalCamera;
+import org.openftc.easyopencv.OpenCvPipeline;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 
 
@@ -47,9 +71,6 @@ public class BlueAutonomous extends LinearOpMode {
     private Servo trigger = null;
     LaunchSystem launchSystem = null;
 
-
-
-
     /*WOBBLE GOAL*/
     private DcMotor linearSlide = null;
     private Servo servo = null;
@@ -68,6 +89,10 @@ public class BlueAutonomous extends LinearOpMode {
     double                  globalAngle, power = .30, correction;
 
 
+    /* VISION */
+    OpenCvCamera webcam;
+    SkystoneDeterminationPipeline pipeline;
+
     // Starting OPMode
     @Override
     public void runOpMode() {
@@ -84,10 +109,6 @@ public class BlueAutonomous extends LinearOpMode {
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         centerDrive = hardwareMap.get(DcMotor.class, "center_drive");
         hdrive = new HDrive(leftDrive, rightDrive, centerDrive, 'y');
-
-
-
-
 
         /* WOBBLE GOAL */
         linearSlide  = hardwareMap.get(DcMotor.class, "slide");
@@ -143,9 +164,6 @@ public class BlueAutonomous extends LinearOpMode {
         // Reverse the motor that runs backwards when connected directly to the battery
         /* DRIVE */
 
-
-
-
         /* IMU */
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
 
@@ -162,8 +180,27 @@ public class BlueAutonomous extends LinearOpMode {
 
         Gyro = new gyro(leftDrive, rightDrive, imu);
 
+        /* VISION */
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+        pipeline = new SkystoneDeterminationPipeline();
+        webcam.setPipeline(pipeline);
 
+        // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
+        // out when the RC activity is in portrait. We do our actual image processing assuming
+        // landscape orientation, though.
+        webcam.setViewportRenderingPolicy(OpenCvCamera.ViewportRenderingPolicy.OPTIMIZE_VIEW);
 
+        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+        {
+            @Override
+            public void onOpened()
+            {
+                webcam.startStreaming(320,240, OpenCvCameraRotation.UPRIGHT);
+            }
+        });
+
+        //////WAITING FOR START BUTTON
         waitForStart();
         runtime.reset();
 
@@ -210,6 +247,108 @@ public class BlueAutonomous extends LinearOpMode {
 
 
     }
+    public static class SkystoneDeterminationPipeline extends OpenCvPipeline
+    {
+        /*
+         * An enum to define the skystone position
+         */
+        public enum RingPosition
+        {
+            FOUR,
+            ONE,
+            NONE
+        }
 
+        /*
+         * Some color constants
+         */
+        static final Scalar BLUE = new Scalar(0, 0, 255);
+        static final Scalar GREEN = new Scalar(0, 255, 0);
+
+        /*
+         * The core values which define the location and size of the sample regions
+         */
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(280,115); //x:181 y:98
+
+        static final int REGION_WIDTH = 35;
+        static final int REGION_HEIGHT = 25;
+
+        final int FOUR_RING_THRESHOLD = 150; //prev 150
+        final int ONE_RING_THRESHOLD = 135; //prev 135
+
+        Point region1_pointA = new Point(
+                REGION1_TOPLEFT_ANCHOR_POINT.x,
+                REGION1_TOPLEFT_ANCHOR_POINT.y);
+        Point region1_pointB = new Point(
+                REGION1_TOPLEFT_ANCHOR_POINT.x + REGION_WIDTH,
+                REGION1_TOPLEFT_ANCHOR_POINT.y + REGION_HEIGHT);
+
+        /*
+         * Working variables
+         */
+        Mat region1_Cb;
+        Mat YCrCb = new Mat();
+        Mat Cb = new Mat();
+        int avg1;
+
+        // Volatile since accessed by OpMode thread w/o synchronization
+        private volatile Vision.SkystoneDeterminationPipeline.RingPosition position = Vision.SkystoneDeterminationPipeline.RingPosition.FOUR; //RingPosition.FOUR
+
+        /*
+         * This function takes the RGB frame, converts to YCrCb,
+         * and extracts the Cb channel to the 'Cb' variable
+         */
+        void inputToCb(Mat input)
+        {
+            Imgproc.cvtColor(input, YCrCb, Imgproc.COLOR_RGB2YCrCb);
+            Core.extractChannel(YCrCb, Cb, 1);
+        }
+
+        @Override
+        public void init(Mat firstFrame)
+        {
+            inputToCb(firstFrame);
+
+            region1_Cb = Cb.submat(new Rect(region1_pointA, region1_pointB));
+        }
+
+        @Override
+        public Mat processFrame(Mat input)
+        {
+            inputToCb(input);
+
+            avg1 = (int) Core.mean(region1_Cb).val[0];
+
+            Imgproc.rectangle(
+                    input, // Buffer to draw on
+                    region1_pointA, // First point which defines the rectangle
+                    region1_pointB, // Second point which defines the rectangle
+                    BLUE, // The color the rectangle is drawn in
+                    2); // Thickness of the rectangle lines
+
+            position = Vision.SkystoneDeterminationPipeline.RingPosition.FOUR; // Record our analysis
+            if(avg1 > FOUR_RING_THRESHOLD){
+                position = Vision.SkystoneDeterminationPipeline.RingPosition.FOUR;
+            }else if (avg1 > ONE_RING_THRESHOLD){
+                position = Vision.SkystoneDeterminationPipeline.RingPosition.ONE;
+            }else{
+                position = Vision.SkystoneDeterminationPipeline.RingPosition.NONE;
+            }
+
+            Imgproc.rectangle(
+                    input, // Buffer to draw on
+                    region1_pointA, // First point which defines the rectangle
+                    region1_pointB, // Second point which defines the rectangle
+                    GREEN, // The color the rectangle is drawn in
+                    -1); // Negative thickness means solid fill
+
+            return input;
+        }
+
+        public int getAnalysis()
+        {
+            return avg1;
+        }
+    }
 
 }
