@@ -37,6 +37,9 @@ public class HDrive {
             rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             centerDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+        else{ //TELEOP Drive Motor Settings
+
+        }
     }
 
     public void driveInches(double distanceLeft, double distanceRight, double power)
