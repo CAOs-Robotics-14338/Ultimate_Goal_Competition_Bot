@@ -33,6 +33,9 @@ public class HDrive {
             rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             centerDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+        else{ //TELEOP Drive Motor Settings
+
+        }
     }
 
 }

@@ -7,23 +7,19 @@ import static java.lang.Thread.sleep;
 
 public class WobbleGoal {
     // Set up Hardware Devices
-    /* Motors */
+    /* Motor */
     DcMotor linSlide;
     double slideLowerPower = 0.25; //1.0
     double slideLiftPower = 0.80;
     /*Servos*/
     Servo claw;
     /*** CLAW Positions ***/
-    /**
-     *  double lift = 0;
-     *     double grab = 0.25;
-     *     double stow = 0.5;
-     */
     double lift = 0.5;
     double grab = 1;
     double stow = 0;
 
     //Constructors
+    // Associate the motor and servo with the class
     public WobbleGoal(DcMotor linearSlide, Servo servo){
         linSlide = linearSlide;
         claw = servo;
@@ -38,16 +34,16 @@ public class WobbleGoal {
     }
     public void storeClaw(){
         this.setClaw(stow);
-    }
+    } //Claw is in its upright position: Beginning of Autonomous
     public void activateClaw() {
         this.setClaw(grab);
-    }
+    }//Claw is in the position to grab the wobble goal from the ground
     public void setliftClawPosition(){
         this.setClaw(lift);
-    }
+    }//the lift position tilts the wobble goal off of the ground for quick movement
     public void zeroPosition(){
         this.setClaw(0);
-    }
+    } //Used for testing purposes
 
     /*** LINEAR SLIDE METHODS ***/
     public void raiseWobbleGoal(){
