@@ -277,8 +277,8 @@ public class BlueAutonomous extends LinearOpMode {
          */
         static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(280,50); //x:181 y:98
 
-        static final int REGION_WIDTH = 40; //35
-        static final int REGION_HEIGHT = 45; //25
+        static final int REGION_WIDTH = 35; //35
+        static final int REGION_HEIGHT = 25; //25
 
         final int FOUR_RING_THRESHOLD = 150; //prev 150
         final int ONE_RING_THRESHOLD = 135; //prev 135
