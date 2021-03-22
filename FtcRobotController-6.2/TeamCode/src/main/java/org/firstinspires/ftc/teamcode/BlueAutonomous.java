@@ -235,14 +235,14 @@ public class BlueAutonomous extends LinearOpMode {
         }
         if(position == 2)
         {
-            hdrive.driveInches(40, 8, 0.4);
+            hdrive.driveInches(35, 8, 0.4);
             sleep(400);
             wobbleGoal.activateClaw();
             sleep(400);
-            hdrive.driveInches(32, 4, 0.4);
+            hdrive.driveInches(25, 4, 0.4);
             sleep(400);
-            hdrive.driveInches(18, 18, 0.4);
-            sleep(200);
+            /*hdrive.driveInches(18, 18, 0.4);
+            sleep(200);*/
         }
 
 
