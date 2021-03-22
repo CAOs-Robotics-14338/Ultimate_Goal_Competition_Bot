@@ -59,10 +59,12 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
 
     // Declare OpMode members.
     private ElapsedTime runtime = new ElapsedTime();
+
     /* DRIVE */
     private DcMotor leftDrive = null;
     private DcMotor rightDrive = null;
     private DcMotor centerDrive = null;
+    private HDrive hdrive = null;
 
     /* INTAKE */
     private DcMotor conveyorBelt = null;
@@ -72,18 +74,18 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
     /* LAUNCHER */
     private DcMotorEx launchLeft = null;
     private DcMotorEx launchRight = null;
+
     /* TRIGGER */
     private Servo trigger = null;
     LaunchSystem launchSystem = null;
-
-
-
 
     /*WOBBLE GOAL*/
     private DcMotor linearSlide = null;
     private Servo servo = null;
     private WobbleGoal wobbleGoal = null;
 
+    /* Tele-Op Variables */
+    Boolean isPressed = false;
 
     @Override
     public void runOpMode() {
@@ -98,38 +100,25 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         centerDrive = hardwareMap.get(DcMotor.class, "center_drive");
+        hdrive = new HDrive(leftDrive, rightDrive, centerDrive, 'n');
 
         /* INTAKE */
         conveyorBelt = hardwareMap.get(DcMotor.class, "belt");
         intake = hardwareMap.get(CRServo.class, "intake");
         intakeSystem = new Intake(conveyorBelt, intake);
 
-
-
         /* LAUNCHER */
         launchLeft = hardwareMap.get(DcMotorEx.class, "launch_left");;
         launchRight = hardwareMap.get(DcMotorEx.class, "launch_right");;
+
         /* TRIGGER */
         trigger = hardwareMap.get(Servo.class, "trigger");
         launchSystem = new LaunchSystem(launchRight, launchLeft, trigger);
-
-        Boolean isPressed = false;
 
         /* WOBBLE GOAL*/
         linearSlide  = hardwareMap.get(DcMotor.class, "slide");
         servo = hardwareMap.get(Servo.class, "claw");
         wobbleGoal = new WobbleGoal(linearSlide, servo);
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        /* DRIVE */
-        leftDrive.setDirection(DcMotor.Direction.REVERSE);
-        rightDrive.setDirection(DcMotor.Direction.REVERSE);
-        centerDrive.setDirection(DcMotor.Direction.REVERSE);
-
-        leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        centerDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -139,6 +128,7 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
         while (opModeIsActive()) {
 
             // Setup a variable for each drive wheel to save power level for telemetry
+
             /*DRIVE*/
             double leftPower;
             double rightPower;
@@ -151,7 +141,7 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
 
             //DRIVE
-            double turn = -gamepad1.left_stick_y * .75; //+
+            double turn = -gamepad1.left_stick_y * 0.65; //+
             double drive  =  gamepad1.right_stick_x * 0.5;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;

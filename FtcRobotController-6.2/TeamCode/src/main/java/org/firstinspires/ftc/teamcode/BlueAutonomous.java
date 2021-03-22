@@ -56,7 +56,6 @@ public class BlueAutonomous extends LinearOpMode {
     private DcMotor centerDrive = null;
     HDrive hdrive = null;
 
-    // Left 2847   Right -2845
 
     /* INTAKE */
     private DcMotor conveyorBelt = null;
@@ -75,12 +74,11 @@ public class BlueAutonomous extends LinearOpMode {
     private DcMotor linearSlide = null;
     private Servo servo = null;
     private WobbleGoal wobbleGoal = null;
-    private double trigger_extended = 0.76;
-    private double trigger_retracted = -0.86;
-    private Boolean isPressed = false;
-    private int pos;
 
+    /* Wobble Goal Target Variables */
+    private int pos;
     private int position = 2;
+
 
     /* GYRO */
     gyro Gyro;
@@ -145,25 +143,13 @@ public class BlueAutonomous extends LinearOpMode {
         trigger = hardwareMap.get(Servo.class, "trigger");
         launchSystem = new LaunchSystem(launchRight, launchLeft, trigger);
 
-        Boolean isPressed = false;
 
         /* WOBBLE GOAL*/
         linearSlide  = hardwareMap.get(DcMotor.class, "slide");
         servo = hardwareMap.get(Servo.class, "claw");
         wobbleGoal = new WobbleGoal(linearSlide, servo);
 
-        /* INTAKE */
-        conveyorBelt.setDirection(DcMotor.Direction.FORWARD);
 
-        intake.setDirection(CRServo.Direction.FORWARD); //Setting up so positive is intaking but negative is pushing the rings away
-
-        /* LAUNCHER */
-        launchLeft.setDirection(DcMotorEx.Direction.REVERSE);
-        launchRight.setDirection(DcMotorEx.Direction.FORWARD);
-
-        // Most robots need the motor on one side to be reversed to drive forward
-        // Reverse the motor that runs backwards when connected directly to the battery
-        /* DRIVE */
 
         /* IMU */
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -176,9 +162,7 @@ public class BlueAutonomous extends LinearOpMode {
         // on a Core Device Interface Module, configured to be a sensor of type "AdaFruit IMU",
         // and named "imu".
         imu = hardwareMap.get(BNO055IMU.class, "imu");
-
         imu.initialize(parameters);
-
         Gyro = new gyro(leftDrive, rightDrive, imu);
 
         /* VISION */
@@ -201,14 +185,27 @@ public class BlueAutonomous extends LinearOpMode {
             }
         });
 
-        //////WAITING FOR START BUTTON
+        /* Updating telemetry with the open CV pipeline analysis and the assesed position */
+        telemetry.addData("Analysis", pipeline.getAnalysis());
+        telemetry.addData("Position", pipeline.position);
+        telemetry.update();
+
+        //////WAITING FOR START BUTTON then restting the timer
         waitForStart();
         runtime.reset();
 
+        /*
+         Driving forward the measured distance using encoder algorithm with a slight turn to the left
+         using more distance on the right wheel
+        */
         hdrive.driveInches(60.62, 61.5, 0.4);
 
 
-        // Launching 3 rings at low power into the high goal
+        /* Launching 3 rings at low power into the high goal
+            Waiting a generous amount between each shot to ensure the motor stabilizes velocity
+            using its PID loop
+         */
+
         launchSystem.launchWheelsToLOWPower();
         sleep(2500);
         launchSystem.triggerLaunch();
@@ -225,31 +222,53 @@ public class BlueAutonomous extends LinearOpMode {
         launchSystem.noLaunchWheels();
         sleep(200);
 
+        /* Updating telemetry with the open CV pipeline analysis and the assesed position */
         telemetry.addData("Analysis", pipeline.getAnalysis());
         telemetry.addData("Position", pipeline.position);
         telemetry.update();
-        
-        if(pipeline.position == Vision.SkystoneDeterminationPipeline.RingPosition.NONE) {
-            hdrive.driveInches(18, 18, 0.4);
+
+
+        /* Using the OpenCV pipeline's assesment to determine what the starting stack and wobble goal target */
+
+
+        if(pipeline.position == Vision.SkystoneDeterminationPipeline.RingPosition.NONE) // No rings detected on the starter stack
+        {
+            /*
+            We drive forward a measured distance, deliver the wobble goal to goal A,
+             then reverse and park over the launch line for navigation points
+             */
+            hdrive.driveInches(16, 16, 0.4);
             sleep(400);
             wobbleGoal.activateClaw();
             sleep(400);
-            hdrive.driveInches(-12, -12, -0.4);
+            hdrive.driveInches(-10, -10, -0.4);
             sleep(400);
         }
         else if(pipeline.position == Vision.SkystoneDeterminationPipeline.RingPosition.ONE)
         {
+            /*
+            We drive forward a measured distance, deliver the wobble goal to goal B,
+             then reverse and park over the launch line for navigation points
+             */
             hdrive.driveInches(35, 8, 0.4);
             sleep(400);
             wobbleGoal.activateClaw();
             sleep(400);
             hdrive.driveInches(25, 4, 0.4);
             sleep(400);
-            /*hdrive.driveInches(18, 18, 0.4);
-            sleep(200);*/
+
         }
         else{ //FOUR
-
+            /*
+            We drive forward a measured distance, deliver the wobble goal to goal C,
+             then reverse and park over the launch line for navigation points
+             */
+            hdrive.driveInches(32, 33.5, 0.4);
+            sleep(400);
+            wobbleGoal.activateClaw();
+            sleep(400);
+            hdrive.driveInches(-30, -30, -0.4);
+            sleep(400);
         }
 
 

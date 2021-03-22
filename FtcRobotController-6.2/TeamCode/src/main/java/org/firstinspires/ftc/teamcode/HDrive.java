@@ -39,6 +39,18 @@ public class HDrive {
         }
         else{ //TELEOP Drive Motor Settings
 
+            leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rightDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+
+            /* DRIVE */
+            leftDrive.setDirection(DcMotor.Direction.REVERSE);
+            rightDrive.setDirection(DcMotor.Direction.REVERSE);
+            centerDrive.setDirection(DcMotor.Direction.REVERSE);
+
+            leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            centerDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
     }
 
