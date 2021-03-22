@@ -78,7 +78,7 @@ public class BlueAutonomous extends LinearOpMode {
     private double trigger_extended = 0.76;
     private double trigger_retracted = -0.86;
     private Boolean isPressed = false;
-    private int position;
+    private int pos;
 
     /* GYRO */
     gyro Gyro;
@@ -223,8 +223,11 @@ public class BlueAutonomous extends LinearOpMode {
         launchSystem.noLaunchWheels();
         sleep(200);
 
-
-        if(position == 1) {
+        telemetry.addData("Analysis", pipeline.getAnalysis());
+        telemetry.addData("Position", pipeline.position);
+        telemetry.update();
+        
+        if(pipeline.position == Vision.SkystoneDeterminationPipeline.RingPosition.NONE) {
             hdrive.driveInches(18, 18, 0.4);
             sleep(400);
             wobbleGoal.activateClaw();
@@ -232,7 +235,7 @@ public class BlueAutonomous extends LinearOpMode {
             hdrive.driveInches(-12, -12, -0.4);
             sleep(400);
         }
-        if(position == 2)
+        else if(pipeline.position == Vision.SkystoneDeterminationPipeline.RingPosition.ONE)
         {
             hdrive.driveInches(18, 18, 0.4);
             sleep(400);
@@ -240,6 +243,9 @@ public class BlueAutonomous extends LinearOpMode {
             sleep(400);
             hdrive.driveInches(-12, -12, -0.4);
             sleep(400);
+        }
+        else{ //FOUR
+
         }
 
 
