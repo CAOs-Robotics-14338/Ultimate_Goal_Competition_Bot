@@ -7,6 +7,10 @@ public class HDrive {
 
     /* Drive Motors */
     private DcMotor leftDrive, rightDrive, centerDrive;
+    double ticksPerRev = 538.6; // ticks per revolution
+    double circumference = 11.874; //inch circumference
+    double ticksPerInch = ticksPerRev/circumference; //45.3596
+    int ticksToDestinationLeft, ticksToDestinationRight;
 
 
     public HDrive(DcMotor LeftDriveMotor, DcMotor RightDriveMotor, DcMotor CenterDriveMotor, char autonomous)
@@ -26,13 +30,38 @@ public class HDrive {
 
             /* DRIVE */
             leftDrive.setDirection(DcMotor.Direction.REVERSE);
-            rightDrive.setDirection(DcMotor.Direction.REVERSE);
+            rightDrive.setDirection(DcMotor.Direction.FORWARD);
             centerDrive.setDirection(DcMotor.Direction.REVERSE);
 
             leftDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             rightDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
             centerDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         }
+    }
+
+    public void driveInches(double distanceLeft, double distanceRight, double power)
+    {
+        this.leftDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.rightDrive.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        this.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        this.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        ticksToDestinationLeft = (int)(ticksPerInch * distanceLeft);
+        ticksToDestinationRight = (int)(ticksPerInch * distanceRight);
+
+
+        this.leftDrive.setTargetPosition(ticksToDestinationLeft);
+        this.rightDrive.setTargetPosition(ticksToDestinationRight);
+
+        this.leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        this.rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        this.rightDrive.setPower(power);
+        this.leftDrive.setPower(power);
+
+        while(this.rightDrive.isBusy() || this.leftDrive.isBusy()){}
     }
 
 }

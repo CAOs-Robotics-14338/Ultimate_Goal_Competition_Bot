@@ -57,6 +57,7 @@ public class BlueAutonomous extends LinearOpMode {
     private double trigger_extended = 0.76;
     private double trigger_retracted = -0.86;
     private Boolean isPressed = false;
+    private int position;
 
     /* GYRO */
     gyro Gyro;
@@ -165,17 +166,7 @@ public class BlueAutonomous extends LinearOpMode {
         waitForStart();
         runtime.reset();
 
-
-        leftDrive.setTargetPosition(2750);
-        rightDrive.setTargetPosition(-2780);
-        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftDrive.setPower(0.4);
-        rightDrive.setPower(0.4);
-
-        while(leftDrive.isBusy() || rightDrive.isBusy()){}
-
+        hdrive.driveInches(60.62, 61.5, 0.4);
 
 
         // Launching 3 rings at low power into the high goal
@@ -193,98 +184,26 @@ public class BlueAutonomous extends LinearOpMode {
         sleep(900);
         launchSystem.triggerBack();
         launchSystem.noLaunchWheels();
-
-        launchRight.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        launchLeft.setMode(DcMotorEx.RunMode.STOP_AND_RESET_ENCODER);
-        leftDrive.setTargetPosition(200);
-        rightDrive.setTargetPosition(-200);
-        leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        while(leftDrive.isBusy() || rightDrive.isBusy()){}
-
-        leftDrive.setPower(0.4);
-        rightDrive.setPower(0.4);
-        wobbleGoal.deliverWobbleGoal();
-
-
-
-
-/*
-
-
-        // Drive forward to the launching position
-        while (opModeIsActive() && runtime.seconds() < 3.5){
-            leftDrive.setPower(0.30);
-            rightDrive.setPower(0.30);
-            // Adding telemetry data of our direction and run time
-            telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        runtime.reset();
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
-
-        Gyro.rotate(-12, 0.2);
-        sleep(500);
-        // Launch
-        launchSystem.launchWheelsToLOWPower();
-        sleep(1000);
-        trigger.setPosition(trigger_extended);
-        sleep(850);
-        trigger.setPosition(trigger_retracted);
-        sleep(500);
-        sleep(1000);
-        trigger.setPosition(trigger_extended);
-        sleep(850);
-        trigger.setPosition(trigger_retracted);
-        sleep(500);
-        sleep(1000);
-        trigger.setPosition(trigger_extended);
-        sleep(850);
-        trigger.setPosition(trigger_retracted);
-        sleep(500);
-        launchSystem.noLaunchWheels();
-
-        runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < 2.5){
-            leftDrive.setPower(0.30);
-            rightDrive.setPower(0.30);
-            // Adding telemetry data of our direction and run time
-            telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
-        }
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
         sleep(200);
-        wobbleGoal.activateClaw();
-        sleep(500);
 
-        /*
-        runtime.reset();
 
-        while (opModeIsActive() && runtime.seconds() < 2){
-            leftDrive.setPower(0.30);
-            rightDrive.setPower(0.30);
-            // Adding telemetry data of our direction and run time
-            telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
+        if(position == 1) {
+            hdrive.driveInches(18, 18, 0.4);
+            sleep(400);
+            wobbleGoal.activateClaw();
+            sleep(400);
+            hdrive.driveInches(-12, -12, -0.4);
+            sleep(400);
         }
-        runtime.reset();
-
-        sleep(200);
-        // Drop wobble goal
-        servo.setPosition(0.25);
-        sleep(200);
-        runtime.reset();
-        while (opModeIsActive() && runtime.seconds() < 3){
-            leftDrive.setPower(-0.30);
-            rightDrive.setPower(-0.30);
-            // Adding telemetry data of our direction and run time
-            telemetry.addData("Path", "TIME: %2.5f S Elapsed", runtime.seconds());
-            telemetry.update();
+        if(position == 2)
+        {
+            hdrive.driveInches(18, 18, 0.4);
+            sleep(400);
+            wobbleGoal.activateClaw();
+            sleep(400);
+            hdrive.driveInches(-12, -12, -0.4);
+            sleep(400);
         }
-
-         */
 
 
     }
