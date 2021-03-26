@@ -44,8 +44,8 @@ public class LaunchSystem {
         launchRight.setVelocity(130, AngleUnit.DEGREES);
     }
     public void launchWheelsToLOWPower(){
-        launchLeft.setVelocity(121.5, AngleUnit.DEGREES);
-        launchRight.setVelocity(121.5, AngleUnit.DEGREES);
+        launchLeft.setVelocity(120, AngleUnit.DEGREES);
+        launchRight.setVelocity(120, AngleUnit.DEGREES);
     }
     public void noLaunchWheels(){
         launchLeft.setPower(0);
