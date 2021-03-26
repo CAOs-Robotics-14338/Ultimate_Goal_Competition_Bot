@@ -246,7 +246,7 @@ public class BlueAutonomous extends LinearOpMode {
             hdrive.driveInches(-10, -10, -0.4);
             sleep(400);
         }
-        else if(pipeline.getAnalysis() < pipeline.getONE_RING_THRESHOLD() && pipeline.getAnalysis() < pipeline.getFOUR_RING_THRESHOLD())
+        else if(pipeline.getAnalysis() > pipeline.getONE_RING_THRESHOLD() && pipeline.getAnalysis() < pipeline.getFOUR_RING_THRESHOLD())
         { /* ONE RING */
             /*
             We drive forward a measured distance, deliver the wobble goal to goal B,
