@@ -195,7 +195,7 @@ public class BlueAutonomous extends LinearOpMode {
         //////WAITING FOR START BUTTON then restting the timer
         //waitForStart();
         runtime.reset();
-
+        int ringPOS = pipeline.getAnalysis();
         /*
          Driving forward the measured distance using encoder algorithm with a slight turn to the left
          using more distance on the right wheel
@@ -233,7 +233,7 @@ public class BlueAutonomous extends LinearOpMode {
         /* Using the OpenCV pipeline's assesment to determine what the starting stack and wobble goal target */
 
 
-        if(pipeline.getAnalysis() < pipeline.getONE_RING_THRESHOLD()) // No rings detected on the starter stack
+        if(ringPOS < pipeline.getONE_RING_THRESHOLD()) // No rings detected on the starter stack
         {
             /*
             We drive forward a measured distance, deliver the wobble goal to goal A,
@@ -246,7 +246,7 @@ public class BlueAutonomous extends LinearOpMode {
             hdrive.driveInches(-10, -10, -0.4);
             sleep(400);
         }
-        else if(pipeline.getAnalysis() > pipeline.getONE_RING_THRESHOLD() && pipeline.getAnalysis() < pipeline.getFOUR_RING_THRESHOLD())
+        else if(ringPOS > pipeline.getONE_RING_THRESHOLD() && ringPOS < pipeline.getFOUR_RING_THRESHOLD())
         { /* ONE RING */
             /*
             We drive forward a measured distance, deliver the wobble goal to goal B,
