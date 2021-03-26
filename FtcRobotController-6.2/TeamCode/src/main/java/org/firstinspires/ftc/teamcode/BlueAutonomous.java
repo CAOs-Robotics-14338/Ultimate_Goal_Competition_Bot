@@ -255,12 +255,27 @@ public class BlueAutonomous extends LinearOpMode {
              */
             hdrive.driveInches(10, 1, 0.4);
             sleep(100);
-            hdrive.driveInches(30, 30, 0.4);
+            hdrive.driveInches(35, 35, 0.4);
             wobbleGoal.activateClaw();
             sleep(1200);
-            hdrive.driveInches(-5, -5, -0.4);
+            hdrive.driveInches(-10, -10, -0.4);
             sleep(400);
             hdrive.driveInches(-10, -1, -0.4);
+            // Parked on the launch line and straight with the single stack of rings.
+            intakeSystem.intake();
+            hdrive.driveInches(-30, -30, -0.4);
+            sleep(400);
+            hdrive.driveInches(5, 5, 0.4);
+            sleep(200);
+            intakeSystem.stop();
+            launchSystem.launchWheelsToHIGHPower();
+            sleep(1500);
+            launchSystem.triggerLaunch();
+            sleep(900);
+            launchSystem.triggerBack();
+            hdrive.driveInches(25, 25, 0.8);
+
+
 
 
         }
