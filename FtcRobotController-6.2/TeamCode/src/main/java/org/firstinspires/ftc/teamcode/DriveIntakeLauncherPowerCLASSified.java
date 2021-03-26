@@ -141,8 +141,8 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
             // - This uses basic math to combine motions and is easier to drive straight.
 
             //DRIVE
-            double turn = -gamepad1.left_stick_y * 0.65; //+
-            double drive  =  gamepad1.right_stick_x * 0.5;
+            double drive = -gamepad1.left_stick_y * 0.65; //+
+            double turn  =  gamepad1.right_stick_x * 0.5;
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
             centerPower = gamepad1.left_stick_x;

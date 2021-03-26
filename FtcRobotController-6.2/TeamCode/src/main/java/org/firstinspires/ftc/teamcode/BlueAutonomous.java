@@ -200,7 +200,8 @@ public class BlueAutonomous extends LinearOpMode {
          Driving forward the measured distance using encoder algorithm with a slight turn to the left
          using more distance on the right wheel
         */
-        hdrive.driveInches(60.62, 61.5, 0.4);
+
+        hdrive.driveInches(50, 52, 0.5);
 
 
         /* Launching 3 rings at low power into the high goal
@@ -208,18 +209,20 @@ public class BlueAutonomous extends LinearOpMode {
             using its PID loop
          */
 
+        launchSystem.launchWheelsToHIGHPower();
+        sleep(2000);
+        launchSystem.triggerLaunch();
+        sleep(1000);
         launchSystem.launchWheelsToLOWPower();
-        sleep(2500);
-        launchSystem.triggerLaunch();
-        sleep(900);
+        sleep(100);
         launchSystem.triggerBack();
-        sleep(1500);
+        sleep(3000);
         launchSystem.triggerLaunch();
-        sleep(900);
+        sleep(1000);
         launchSystem.triggerBack();
-        sleep(1500);
+        sleep(3000);
         launchSystem.triggerLaunch();
-        sleep(900);
+        sleep(1000);
         launchSystem.triggerBack();
         launchSystem.noLaunchWheels();
         sleep(200);
@@ -240,11 +243,9 @@ public class BlueAutonomous extends LinearOpMode {
              then reverse and park over the launch line for navigation points
              */
             hdrive.driveInches(16, 16, 0.4);
-            sleep(400);
+            sleep(100);
             wobbleGoal.activateClaw();
-            sleep(400);
-            hdrive.driveInches(-10, -10, -0.4);
-            sleep(400);
+
         }
         else if(ringPOS > pipeline.getONE_RING_THRESHOLD() && ringPOS < pipeline.getFOUR_RING_THRESHOLD())
         { /* ONE RING */
@@ -252,12 +253,15 @@ public class BlueAutonomous extends LinearOpMode {
             We drive forward a measured distance, deliver the wobble goal to goal B,
              then reverse and park over the launch line for navigation points
              */
-            hdrive.driveInches(35, 8, 0.4);
-            sleep(400);
+            hdrive.driveInches(10, 1, 0.4);
+            sleep(100);
+            hdrive.driveInches(30, 30, 0.4);
             wobbleGoal.activateClaw();
+            sleep(1200);
+            hdrive.driveInches(-5, -5, -0.4);
             sleep(400);
-            hdrive.driveInches(25, 4, 0.4);
-            sleep(400);
+            hdrive.driveInches(-10, -1, -0.4);
+
 
         }
         else{ //FOUR RINGS
@@ -265,13 +269,22 @@ public class BlueAutonomous extends LinearOpMode {
             We drive forward a measured distance, deliver the wobble goal to goal C,
              then reverse and park over the launch line for navigation points
              */
-            hdrive.driveInches(32, 33.5, 0.4);
-            sleep(400);
+            hdrive.driveInches(1, 3, 0.4);
+            sleep(100);
+            hdrive.driveInches(64, 64, 0.4);
+            sleep(10);
+            wobbleGoal.setliftClawPosition();
+            sleep(500);
             wobbleGoal.activateClaw();
-            sleep(400);
-            hdrive.driveInches(-30, -30, -0.4);
+            sleep(500);
+            wobbleGoal.storeClaw();
+            sleep(1200);
+            hdrive.driveInches(-42, -42, -0.4);
             sleep(400);
         }
+
+        webcam.stopStreaming();
+        stop();
 
 
     }
