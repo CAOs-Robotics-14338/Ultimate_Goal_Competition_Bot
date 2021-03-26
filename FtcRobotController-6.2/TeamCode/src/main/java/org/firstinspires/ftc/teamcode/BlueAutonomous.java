@@ -188,6 +188,7 @@ public class BlueAutonomous extends LinearOpMode {
         /* Updating telemetry with the open CV pipeline analysis and the assesed position */
         telemetry.addData("Analysis", pipeline.getAnalysis());
         telemetry.addData("Position", pipeline.position);
+        telemetry.addData("Average", pipeline.avg1);
         telemetry.update();
 
         //////WAITING FOR START BUTTON then restting the timer
@@ -294,7 +295,7 @@ public class BlueAutonomous extends LinearOpMode {
         /*
          * The core values which define the location and size of the sample regions
          */
-        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(280,50); //x:181 y:98
+        static final Point REGION1_TOPLEFT_ANCHOR_POINT = new Point(280,53); //x:181 y:98
 
         static final int REGION_WIDTH = 35; //35
         static final int REGION_HEIGHT = 25; //25
