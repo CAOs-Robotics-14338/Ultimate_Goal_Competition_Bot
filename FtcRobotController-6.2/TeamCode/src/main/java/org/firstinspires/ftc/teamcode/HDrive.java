@@ -12,7 +12,7 @@ public class HDrive {
     double ticksPerInch = ticksPerRev/circumference; //45.3596
     int ticksToDestinationLeft, ticksToDestinationRight;
 
-
+    //Constructor
     public HDrive(DcMotor LeftDriveMotor, DcMotor RightDriveMotor, DcMotor CenterDriveMotor, char autonomous)
     {
         this.leftDrive = LeftDriveMotor;
