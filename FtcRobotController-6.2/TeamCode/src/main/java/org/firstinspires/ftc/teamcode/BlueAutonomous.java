@@ -233,7 +233,7 @@ public class BlueAutonomous extends LinearOpMode {
         /* Using the OpenCV pipeline's assesment to determine what the starting stack and wobble goal target */
 
 
-        if(pipeline.position == Vision.SkystoneDeterminationPipeline.RingPosition.NONE) // No rings detected on the starter stack
+        if(pipeline.getAnalysis() < pipeline.getONE_RING_THRESHOLD()) // No rings detected on the starter stack
         {
             /*
             We drive forward a measured distance, deliver the wobble goal to goal A,
@@ -246,8 +246,8 @@ public class BlueAutonomous extends LinearOpMode {
             hdrive.driveInches(-10, -10, -0.4);
             sleep(400);
         }
-        else if(pipeline.position == Vision.SkystoneDeterminationPipeline.RingPosition.ONE)
-        {
+        else if(pipeline.getAnalysis() < pipeline.getONE_RING_THRESHOLD() && pipeline.getAnalysis() < pipeline.getFOUR_RING_THRESHOLD())
+        { /* ONE RING */
             /*
             We drive forward a measured distance, deliver the wobble goal to goal B,
              then reverse and park over the launch line for navigation points
@@ -260,7 +260,7 @@ public class BlueAutonomous extends LinearOpMode {
             sleep(400);
 
         }
-        else{ //FOUR
+        else{ //FOUR RINGS
             /*
             We drive forward a measured distance, deliver the wobble goal to goal C,
              then reverse and park over the launch line for navigation points
@@ -376,6 +376,13 @@ public class BlueAutonomous extends LinearOpMode {
         public int getAnalysis()
         {
             return avg1;
+        }
+        public int getFOUR_RING_THRESHOLD(){
+            return FOUR_RING_THRESHOLD;
+        }
+
+        public int getONE_RING_THRESHOLD() {
+            return ONE_RING_THRESHOLD;
         }
     }
 
