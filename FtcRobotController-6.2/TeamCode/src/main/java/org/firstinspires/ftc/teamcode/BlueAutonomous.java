@@ -186,13 +186,14 @@ public class BlueAutonomous extends LinearOpMode {
         });
 
         /* Updating telemetry with the open CV pipeline analysis and the assesed position */
-        telemetry.addData("Analysis", pipeline.getAnalysis());
-        telemetry.addData("Position", pipeline.position);
-        telemetry.addData("Average", pipeline.avg1);
-        telemetry.update();
-
+        while(!isStarted()) {
+            telemetry.addData("Analysis", pipeline.getAnalysis());
+            telemetry.addData("Position", pipeline.position);
+            telemetry.addData("Average", pipeline.avg1);
+            telemetry.update();
+        }
         //////WAITING FOR START BUTTON then restting the timer
-        waitForStart();
+        //waitForStart();
         runtime.reset();
 
         /*
