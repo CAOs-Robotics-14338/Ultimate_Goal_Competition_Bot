@@ -353,7 +353,7 @@ public class BlueAutonomous extends LinearOpMode {
                     BLUE, // The color the rectangle is drawn in
                     2); // Thickness of the rectangle lines
 
-            position = Vision.SkystoneDeterminationPipeline.RingPosition.FOUR; // Record our analysis
+            position = Vision.SkystoneDeterminationPipeline.RingPosition.NONE; //.FOUR// Record our analysis
             if(avg1 > FOUR_RING_THRESHOLD){
                 position = Vision.SkystoneDeterminationPipeline.RingPosition.FOUR;
             }else if (avg1 > ONE_RING_THRESHOLD){
