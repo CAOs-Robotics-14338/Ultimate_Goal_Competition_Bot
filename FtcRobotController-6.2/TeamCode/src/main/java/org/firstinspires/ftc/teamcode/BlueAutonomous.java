@@ -265,7 +265,7 @@ public class BlueAutonomous extends LinearOpMode {
             intakeSystem.intake();
             hdrive.driveInches(-30, -30, -0.4);
             sleep(400);
-            hdrive.driveInches(5, 5, 0.4);
+            hdrive.driveInches(5, 7, 0.4);
             sleep(200);
             intakeSystem.stop();
             launchSystem.launchWheelsToHIGHPower();
@@ -273,7 +273,7 @@ public class BlueAutonomous extends LinearOpMode {
             launchSystem.triggerLaunch();
             sleep(900);
             launchSystem.triggerBack();
-            hdrive.driveInches(25, 25, 0.8);
+            hdrive.driveInches(30, 30, 0.8);
 
 
 
