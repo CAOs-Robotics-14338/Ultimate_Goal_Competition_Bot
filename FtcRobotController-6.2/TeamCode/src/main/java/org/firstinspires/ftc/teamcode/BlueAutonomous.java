@@ -286,7 +286,7 @@ public class BlueAutonomous extends LinearOpMode {
              */
             hdrive.driveInches(1, 3, 0.4);
             sleep(100);
-            hdrive.driveInches(64, 64, 0.4);
+            hdrive.driveInches(68, 68, 0.4);
             sleep(10);
             wobbleGoal.setliftClawPosition();
             sleep(500);
@@ -330,7 +330,7 @@ public class BlueAutonomous extends LinearOpMode {
         static final int REGION_HEIGHT = 25; //25
 
         final int FOUR_RING_THRESHOLD = 150; //prev 150
-        final int ONE_RING_THRESHOLD = 135; //prev 135
+        final int ONE_RING_THRESHOLD = 130; //prev 135
 
         Point region1_pointA = new Point(
                 REGION1_TOPLEFT_ANCHOR_POINT.x,
