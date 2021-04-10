@@ -209,17 +209,18 @@ public class BlueAutonomous extends LinearOpMode {
             using its PID loop
          */
 
-        launchSystem.launchWheelsToHIGHPower();
+        launchSystem.launchWheelsToAUTONOMOUSPower(129);
         sleep(2000);
         launchSystem.triggerLaunch();
         sleep(1000);
-        launchSystem.launchWheelsToLOWPower();
-        sleep(100);
         launchSystem.triggerBack();
+        launchSystem.launchWheelsToAUTONOMOUSPower(128);
         sleep(3000);
         launchSystem.triggerLaunch();
         sleep(1000);
         launchSystem.triggerBack();
+        launchSystem.launchWheelsToAUTONOMOUSPower(127.5);
+
         sleep(3000);
         launchSystem.triggerLaunch();
         sleep(1000);
