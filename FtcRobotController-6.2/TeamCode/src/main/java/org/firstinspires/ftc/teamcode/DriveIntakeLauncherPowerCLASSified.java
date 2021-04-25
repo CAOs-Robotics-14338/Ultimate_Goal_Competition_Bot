@@ -133,6 +133,8 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
             double leftPower;
             double rightPower;
             double centerPower;
+            double rightTrigger1;
+            double leftTrigger1;
 
             // Choose to drive using either Tank Mode, or POV Mode
             // Comment out the method that's not used.  The default below is POV.
@@ -146,6 +148,8 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
             leftPower    = Range.clip(drive + turn, -1.0, 1.0) ;
             rightPower   = Range.clip(drive - turn, -1.0, 1.0) ;
             centerPower = gamepad1.left_stick_x;
+            rightTrigger1 = gamepad1.right_trigger;
+            leftTrigger1 = gamepad1.left_trigger;
 
             // Send calculated power to wheels
             leftDrive.setPower(leftPower);
@@ -200,6 +204,14 @@ public class DriveIntakeLauncherPowerCLASSified extends LinearOpMode {
             }
             else {
                 wobbleGoal.stopGoal();
+            }
+
+            if(gamepad1.right_trigger > 0 || gamepad1.left_trigger > 0 ){
+                launchSystem.launchWheelsToSetVelocity(124.5); // 124     123
+            }
+            else if(gamepad1.back){
+                launchSystem.launchWheelsToSetVelocity(125); //  124.5   124     123
+
             }
             // Show the elapsed game time and wheel power.
             telemetry.addData("Status", "Run Time: " + runtime.toString());

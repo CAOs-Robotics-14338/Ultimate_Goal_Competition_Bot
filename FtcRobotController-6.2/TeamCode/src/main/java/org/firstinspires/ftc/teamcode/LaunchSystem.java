@@ -20,7 +20,7 @@ public class LaunchSystem {
     /* TRIGGER */
     Servo trigger;
     double trigger_extended = 0.87;
-    double trigger_retracted = -0.80;
+    double trigger_retracted = -0.83;
 
 
 
@@ -40,16 +40,22 @@ public class LaunchSystem {
     }
 
     public void launchWheelsToHIGHPower(){
-        launchLeft.setVelocity(126, AngleUnit.DEGREES);
-        launchRight.setVelocity(126, AngleUnit.DEGREES);
+        launchLeft.setVelocity(132, AngleUnit.DEGREES); //126
+        launchRight.setVelocity(132, AngleUnit.DEGREES); //126
     }
     public void launchWheelsToLOWPower(){
-        launchLeft.setVelocity(123.5, AngleUnit.DEGREES);
-        launchRight.setVelocity(123.5, AngleUnit.DEGREES);
+        launchLeft.setVelocity(130, AngleUnit.DEGREES); //121.5
+        launchRight.setVelocity(130, AngleUnit.DEGREES); //121.5
     }
     public void launchWheelsToAUTONOMOUSPower(double power){
         launchLeft.setVelocity(power, AngleUnit.DEGREES);
         launchRight.setVelocity(power, AngleUnit.DEGREES);
+    }
+
+    public void launchWheelsToSetVelocity(double power){
+        launchLeft.setVelocity(power, AngleUnit.DEGREES);
+        launchRight.setVelocity(power, AngleUnit.DEGREES);
+
     }
     public void noLaunchWheels(){
         launchLeft.setPower(0);
